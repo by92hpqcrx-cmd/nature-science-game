@@ -9,7 +9,19 @@ function show(id){sections.forEach(k=>$(k).classList.toggle('hidden', k!==id));}
 function msg(v){$('message').textContent=v||'';}
 function errText(e){return e?.message||String(e);}
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;}
-async function client(){if(cloud)return cloud;cloud=await import('./supabase-client.js');if(!cloud.configured)throw Error('尚未設定 Supabase，班級模式暫時不可使用。');return cloud;}
+async function client(){
+  if(cloud?.sb)return cloud;
+  const c=window.NATURE_SUPABASE;
+  if(!c || !/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(String(c.url||'').trim()) || !String(c.anonKey||'').trim()) {
+    throw Error('班級模式尚未連接 Supabase：請檢查 supabase-config.js 的 Project URL 與 Publishable key 是否已填入，並確認檔案已上傳 GitHub。');
+  }
+  const module=await import('./supabase-client.js?v=20261108-2');
+  if(!module.configured || !module.sb || !module.sb.auth){
+    throw Error('Supabase 用戶端未初始化，請重新確認 supabase-config.js 是否與個人版位於相同目錄，並更新網站快取。');
+  }
+  cloud=module;
+  return cloud;
+}
 async function ensureUser(){const {sb,authUser}=await client();let u=await authUser();if(u)return u;const {data,error}=await sb.auth.signInAnonymously();if(error)throw error;return data.user;}
 async function fetchPool(){const q=[...localQuestions];if(mode==='class'){
   const {sb}=await client();const {data,error}=await sb.from('nature_questions').select('id,unit,difficulty,topic,question,options,answer,explanation').eq('is_active',true).limit(1000);

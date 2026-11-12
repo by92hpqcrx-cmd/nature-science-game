@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>自然科學王｜四人搶答</title>
+<link rel="stylesheet" href="./style.css">
+<style>.topactions a{display:inline-block;padding:10px 14px;background:#243a69;border:1px solid #6480b5;border-radius:12px;color:white;text-decoration:none;font-weight:800}.topactions a:hover{background:#36548d}.playerhead{margin-top:14px}.schoolhint{font-size:13px;text-align:center;color:#adbfdf;margin-top:8px}</style>
+</head><body>
+<div id="confetti" aria-hidden="true"></div>
+<header class="topbar"><div class="brand"><span class="brandicon">🧬</span><div><strong>自然科學王｜四人搶答</strong><small>四人一台大螢幕・各自選 1、2、3、4</small></div></div><nav class="topactions"><a href="./personal.html">👤 個人挑戰</a><a href="./teacher.html">👩‍🏫 老師管理</a></nav></header>
+<main>
+<section class="panel setup" id="setupScreen">
+<div class="hero-icon">🌟🧪🔭🌈</div><h1>自然科學王 <span>四人搶答</span></h1>
+<p class="lead">四位同學站成一排，同時選答案。最快答對加 100 分，其他答對加 60 分！</p>
+<div class="setupgrid">
+<label>選擇單元<select id="unitSelect"><option value="all">全部單元</option><option value="01">第一單元｜動物世界</option><option value="02">第二單元｜探索聲光世界</option></select></label>
+<label>難易度<select id="difficulty"><option value="all">全部難度</option><option value="易">易</option><option value="中">中</option><option value="難">難</option></select></label>
+<label>題目數<select id="roundCount"><option value="5">5 題</option><option value="10" selected>10 題</option><option value="20">20 題</option><option value="all">全部題目</option></select></label>
+<label>每題倒數<select id="seconds"><option value="10">10 秒</option><option value="15" selected>15 秒</option><option value="20">20 秒</option><option value="30">30 秒</option><option value="45">45 秒</option></select></label>
+</div>
+<h2>🧑‍🤝‍🧑 四位玩家姓名</h2><div class="playernames">
+<label>🦊 玩家一<input id="name0" value="玩家一" maxlength="12"></label>
+<label>🐳 玩家二<input id="name1" value="玩家二" maxlength="12"></label>
+<label>🐸 玩家三<input id="name2" value="玩家三" maxlength="12"></label>
+<label>🦁 玩家四<input id="name3" value="玩家四" maxlength="12"></label></div>
+<div class="summary"><span id="poolCount">載入題庫中…</span><span>各玩家每題只能作答一次</span></div>
+<div class="center"><button id="startBtn" class="primary big" disabled>🚀 開始四人搶答</button></div>
+<p class="schoolhint">本頁使用目前儲存庫的 questions.js 與 app.js，免輸入學生資料。</p></section>
+<section id="gameScreen" class="hidden">
+<div class="statsbar"><div><span id="progressText">第 1 題</span><div id="topicText" class="muted"></div></div><div class="timerwrap"><div class="timer" id="timerText">15</div><div class="timertrack"><div id="timerFill"></div></div></div><div class="rightstats"><span id="difficultyText">中</span><button id="fullscreenBtn" class="secondary">⛶ 全螢幕</button></div></div>
+<section class="panel questionbox"><div class="questionlabel">🔍 自然科學挑戰<span class="difficulty">四選一</span></div><h2 id="questionText"></h2><div id="answerOptions" class="answers"></div><div id="feedback" class="feedback" aria-live="polite"></div></section>
+<div class="playerhead"><strong>⚡ 四人搶答操作區</strong><span id="answeredText">0 / 4</span></div><div class="players" id="players"></div>
+<div class="gamecontrols"><button id="pauseBtn" class="secondary">⏸ 暫停</button><button id="revealBtn" class="secondary">公布答案</button><button id="nextBtn" class="primary" disabled>下一題 ➜</button></div>
+</section>
+<section id="finalScreen" class="panel final hidden"><div class="trophy">🏆</div><h1>四人搶答完成！</h1><h2 id="championText"></h2><p>答題成績排行榜</p><div class="ranking" id="finalRanking"></div><div class="finalBtns"><button id="playAgainBtn" class="primary">🔄 再玩一次</button><button id="exportBtn" class="secondary">📄 匯出成績 CSV</button></div></section>
+</main>
+<footer>自然科學王｜四人同畫面搶答・1／2／3／4 按鈕作答</footer>
+<dialog id="teacherDialog"><div class="dialogbody"><h2>👩‍🏫 老師提示</h2><p>四位學生站成一排，各人操作自己的四個選項。每題以答對速度計分；第一位答對加 100 分，其他答對加 60 分，答錯不加分。</p><p>玩家一鍵盤 Q/W/E/R；玩家二 U/I/O/P；玩家三 A/S/D/F；玩家四 J/K/L/;。亦可直接點選畫面上的按鈕。</p><button id="closeDialog" class="primary">知道了</button></div></dialog>
+<button id="teacherBtn" class="secondary" style="position:fixed;right:12px;bottom:12px;z-index:9" title="操作說明">❔ 操作說明</button>
+<script src="./questions.js"></script><script src="./app.js"></script>
+</body></html>

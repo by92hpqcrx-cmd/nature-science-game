@@ -21,3 +21,8 @@ body.scene-playground{background:linear-gradient(180deg,#afe5ff,#f1fff5 52%,#b4e
 body.scene-space{background:linear-gradient(150deg,#283c78,#705b96 55%,#d6b7db);color:#254a43}
 body.scene-seaside{background:linear-gradient(180deg,#b5e9ff 0 47%,#8bddde 48% 64%,#ffedc5 65%)}
 @media(max-width:700px){.nature-scene{margin:8px 12px;flex-wrap:wrap}.nature-pet{font-size:32px}.nature-control{width:100%}.nature-control label{font-size:12px}.topbar{flex-wrap:wrap}.cloudmain{margin-top:10px}}
+
+/* 原創 SVG 教室場景：窗戶、綠色黑板、盆栽 */
+body:not(.scene-playground):not(.scene-space):not(.scene-seaside) .nature-scene{background:#e5f5dd url('./classroom-scene.svg') center / cover no-repeat;min-height:132px;align-items:flex-end;padding-bottom:8px}
+body:not(.scene-playground):not(.scene-space):not(.scene-seaside) .nature-scene .nature-control{background:#ffffffed;border:1px solid #c1e4d1;border-radius:13px;padding:6px}
+body:not(.scene-playground):not(.scene-space):not(.scene-seaside) .nature-pets{background:#ffffffcc;border-radius:18px;padding:3px 12px}

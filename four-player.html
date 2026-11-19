@@ -1,9 +1,28 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>自然科學王｜四人搶答</title>
-<link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./nature-cute.css?v=20261119-dark-text-force">
+<link rel="stylesheet" href="./style.css?v=20261119-dark-contrast-v3"><link rel="stylesheet" href="./nature-cute.css?v=20261119-dark-contrast-v3">
 <style>.topactions a{display:inline-block;padding:10px 14px;background:#243a69;border:1px solid #6480b5;border-radius:12px;color:white;text-decoration:none;font-weight:800}.topactions a:hover{background:#36548d}.playerhead{margin-top:14px}.schoolhint{font-size:13px;text-align:center;color:#adbfdf;margin-top:8px}</style>
-</head><body>
+<style id="four-player-legibility-v3">
+/* 最後載入：保障題目及選項文字的深色高對比 */
+#gameScreen .questionbox{background:#fffef6!important;color:#142f2a!important}
+#gameScreen #questionText,#gameScreen .questionbox h2{
+ color:#142f2a!important;-webkit-text-fill-color:#142f2a!important;
+ font-weight:900!important;text-shadow:none!important;
+}
+#gameScreen #answerOptions .answer-option{
+ background:#fffef8!important;color:#17332c!important;
+ border:3px solid #a3d2bc!important;
+}
+#gameScreen #answerOptions .answer-option span{
+ color:#17332c!important;-webkit-text-fill-color:#17332c!important;
+ font-weight:850!important;text-shadow:none!important;
+}
+#gameScreen #answerOptions .answer-option b{
+ color:#17332c!important;-webkit-text-fill-color:#17332c!important;
+}
+#gameScreen #answerOptions .answer-option.correct{background:#bef2d2!important}
+</style></head><body>
 <div id="confetti" aria-hidden="true"></div>
 <header class="topbar"><div class="brand"><span class="brandicon">🧬</span><div><strong>自然科學王｜四人搶答</strong><small>四人一台大螢幕・各自選 1、2、3、4</small></div></div><nav class="topactions"><button id="fullscreenBtn" type="button" class="secondary" aria-pressed="false">⛶ 全螢幕</button><a href="./personal.html">👤 個人挑戰</a><a href="./teacher.html">👩‍🏫 老師管理</a></nav></header>
 <main>
@@ -26,7 +45,7 @@
 <p class="schoolhint">本頁使用目前儲存庫的 questions.js 與 app.js，免輸入學生資料。</p></section>
 <section id="gameScreen" class="hidden">
 <div class="statsbar"><div><span id="progressText">第 1 題</span><div id="topicText" class="muted"></div></div><div class="timerwrap"><div class="timer" id="timerText">15</div><div class="timertrack"><div id="timerFill"></div></div></div><div class="rightstats"><span id="difficultyText">中</span></div></div>
-<section class="panel questionbox"><div class="questionlabel">🔍 自然科學挑戰<span class="difficulty">四選一</span></div><h2 id="questionText" style="color:#172e2a!important;-webkit-text-fill-color:#172e2a;font-weight:900;text-shadow:none"></h2><div id="answerOptions" class="answers"></div><div id="feedback" class="feedback" aria-live="polite"></div></section>
+<section class="panel questionbox"><div class="questionlabel">🔍 自然科學挑戰<span class="difficulty">四選一</span></div><h2 id="questionText" style="color:#142f2a!important;-webkit-text-fill-color:#142f2a!important;font-weight:900;text-shadow:none"></h2><div id="answerOptions" class="answers"></div><div id="feedback" class="feedback" aria-live="polite"></div></section>
 <div class="playerhead"><strong>⚡ 四人搶答操作區</strong><span id="answeredText">0 / 4</span></div><div class="players" id="players"></div>
 <div class="gamecontrols"><button id="pauseBtn" class="secondary">⏸ 暫停</button><button id="revealBtn" class="secondary">公布答案</button><button id="nextBtn" class="primary" disabled>下一題 ➜</button></div>
 </section>
@@ -35,5 +54,5 @@
 <footer>自然科學王｜四人同畫面搶答・1／2／3／4 按鈕作答</footer>
 <dialog id="teacherDialog"><div class="dialogbody"><h2>👩‍🏫 老師提示</h2><p>四位學生站成一排，各人操作自己的四個選項。每題以答對速度計分；第一位答對加 100 分，其他答對加 60 分，答錯不加分。</p><p>玩家一鍵盤 Q/W/E/R；玩家二 U/I/O/P；玩家三 A/S/D/F；玩家四 J/K/L/;。亦可直接點選畫面上的按鈕。</p><button id="closeDialog" class="primary">知道了</button></div></dialog>
 <button id="teacherBtn" class="secondary" style="position:fixed;right:12px;bottom:12px;z-index:9" title="操作說明">❔ 操作說明</button>
-<script src="./supabase-config.js"></script><script src="./questions.js?v=20261119-u3-205"></script><script src="./app.js"></script>
+<script src="./supabase-config.js"></script><script src="./questions.js?v=20261119-u3-205"></script><script src="./app.js?v=20261119-dark-contrast-v3"></script>
 <script src="./nature-cute.js?v=20261119-screen-large"></script><script src="./unit3-cloud.js?v=20261120"></script></body></html>

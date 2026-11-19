@@ -46,3 +46,92 @@ body::before{content:none!important}
 .nature-sky{display:none!important}
 .panel,.cloudpanel{background:linear-gradient(135deg,rgba(255,254,249,.96),rgba(233,250,242,.95))!important}
 @media(max-width:700px){body{background-attachment:scroll!important}}
+
+/* 自然科學王 2026-11-19：班寵整列移除，大尺寸答題，八張 FunDesk 原圖隨機 */
+.nature-scene,.nature-pets,.nature-sky{display:none!important}
+body{overflow-x:hidden}
+.topbar{max-width:none;padding:8px 16px!important;min-height:55px}
+main,.cloudmain{width:100%;max-width:1850px;margin:6px auto 12px;padding:0 12px}
+.topactions{align-items:center}
+#fullscreenBtn{white-space:nowrap;font-size:clamp(15px,1.3vw,21px);padding:8px 16px}
+#questionPanel{width:100%;max-width:1780px;margin:4px auto;padding:clamp(14px,1.7vw,28px)}
+#questionPanel #questionText{font-size:clamp(30px,3.25vw,54px);line-height:1.3;margin:14px 0 19px}
+#questionPanel #progress,#questionPanel #score{font-size:clamp(22px,2.3vw,32px)}
+#questionPanel #topic{font-size:clamp(16px,1.4vw,23px);margin:7px 0}
+#questionPanel #options{grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(8px,1.2vw,18px)}
+#questionPanel #options button{font-size:clamp(22px,2.25vw,36px);line-height:1.28;min-height:clamp(75px,12vh,132px);padding:12px 20px}
+#questionPanel #feedback{font-size:clamp(18px,1.6vw,26px);line-height:1.25}
+#questionPanel #nextBtn{font-size:clamp(20px,1.8vw,28px)}
+#gameScreen .statsbar{padding:8px 16px;margin-bottom:9px;font-size:clamp(20px,1.7vw,27px)}
+#gameScreen .questionbox{padding:15px 22px 10px;min-height:0}
+#gameScreen .questionbox h2{font-size:clamp(29px,3vw,50px);line-height:1.28;margin:10px auto 15px}
+#gameScreen .answer-option{font-size:clamp(22px,2.1vw,35px);line-height:1.25;min-height:clamp(70px,10vh,110px);padding:10px 14px}
+#gameScreen .answer-option b{width:43px;height:43px}
+#gameScreen .feedback{font-size:clamp(17px,1.5vw,25px);min-height:24px;padding:5px 0}
+#gameScreen .playerhead{margin:7px 0 5px;font-size:clamp(18px,1.5vw,23px)}
+#gameScreen .player{padding:9px}
+#gameScreen .player-status{margin:4px 0}
+#gameScreen .player-buttons button{font-size:clamp(23px,2.2vw,35px);padding:clamp(7px,1vh,14px) 0}
+#gameScreen .gamecontrols{margin-top:7px}
+@media(max-width:700px){
+ #questionPanel #options{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #questionPanel #options button{font-size:clamp(16px,3vw,23px);min-height:65px;padding:8px}
+ #gameScreen .questionbox h2{font-size:clamp(20px,4vw,30px)}
+ #gameScreen .answer-option{font-size:clamp(14px,2.8vw,21px);min-height:57px;padding:6px}
+ #gameScreen .answer-option b{width:28px;height:28px}
+ #gameScreen .player-buttons button{font-size:18px;padding:8px 0}
+}
+/* Fullscreen: all content allocated within the visible viewport, no scrolling */
+html:fullscreen,html:fullscreen body,body.nature-fullscreen{width:100%;height:100%;overflow:hidden!important}
+body.nature-fullscreen{height:100dvh;display:flex;flex-direction:column}
+body.nature-fullscreen .topbar{flex:0 0 52px;min-height:0;padding:4px 12px!important}
+body.nature-fullscreen .brand small,body.nature-fullscreen .topactions a{display:none}
+body.nature-fullscreen main{flex:1 1 0;min-height:0;max-width:none;overflow:hidden!important;margin:0!important;padding:4px 10px 7px!important}
+body.nature-fullscreen footer{display:none}
+body.nature-fullscreen .panel{box-shadow:none}
+body.nature-fullscreen #message{padding:0;min-height:0;max-height:20px;overflow:hidden}
+body.nature-fullscreen #questionPanel{height:100%;min-height:0;max-width:none;margin:0;padding:clamp(6px,1.2vh,15px);display:flex;flex-direction:column;gap:clamp(3px,.6vh,9px);overflow:hidden}
+body.nature-fullscreen #questionPanel .cloudrow{flex:0 0 auto}
+body.nature-fullscreen #questionPanel #topic{margin:0;flex:0 0 auto}
+body.nature-fullscreen #questionPanel #questionText{flex:0 1 auto;min-height:0;margin:0;font-size:clamp(23px,2.9vw,46px);line-height:1.18;overflow:hidden}
+body.nature-fullscreen #questionPanel #options{flex:1 1 0;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:clamp(4px,.8vh,12px)}
+body.nature-fullscreen #questionPanel #options button{min-height:0;padding:clamp(4px,.8vh,12px) clamp(7px,1vw,18px);font-size:clamp(18px,2vw,32px);line-height:1.18;overflow:hidden}
+body.nature-fullscreen #questionPanel #feedback{margin:0;flex:0 0 auto;max-height:clamp(34px,9vh,86px);overflow:hidden;font-size:clamp(15px,1.45vw,22px)}
+body.nature-fullscreen #questionPanel #nextBtn:not(.hidden){flex:0 0 auto;padding:6px 16px}
+body.nature-fullscreen #questionPanel .guest-footer{display:none}
+body.nature-fullscreen #gameScreen{height:100%;min-height:0;overflow:hidden;display:grid;grid-template-rows:auto minmax(0,1fr) auto auto auto;gap:clamp(3px,.6vh,8px)}
+body.nature-fullscreen #gameScreen .statsbar{margin:0;min-height:0;padding:4px 10px}
+body.nature-fullscreen #gameScreen .timer{font-size:clamp(25px,3vw,40px)}
+body.nature-fullscreen #gameScreen .questionbox{min-height:0;height:100%;padding:clamp(6px,1vh,14px) clamp(8px,1vw,16px);display:flex;flex-direction:column;gap:clamp(3px,.5vh,8px);overflow:hidden}
+body.nature-fullscreen #gameScreen .questionlabel{flex:0 0 auto}
+body.nature-fullscreen #gameScreen .questionbox h2{flex:0 1 auto;min-height:0;margin:0 auto;font-size:clamp(21px,2.65vw,43px);line-height:1.19;overflow:hidden}
+body.nature-fullscreen #gameScreen .answers{flex:1 1 0;min-height:0;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:clamp(4px,.7vh,10px)}
+body.nature-fullscreen #gameScreen .answer-option{min-height:0;padding:clamp(3px,.6vh,8px) clamp(6px,1vw,12px);font-size:clamp(17px,1.85vw,31px);overflow:hidden}
+body.nature-fullscreen #gameScreen .answer-option b{width:clamp(26px,3vw,40px);height:clamp(26px,3vw,40px)}
+body.nature-fullscreen #gameScreen .feedback{flex:0 0 auto;max-height:clamp(24px,7vh,60px);min-height:0;overflow:hidden;font-size:clamp(14px,1.25vw,21px)}
+body.nature-fullscreen #gameScreen .playerhead{margin:0}
+body.nature-fullscreen #gameScreen .players{min-height:0;gap:5px}
+body.nature-fullscreen #gameScreen .player{padding:clamp(3px,.7vh,8px)}
+body.nature-fullscreen #gameScreen .player-status{min-height:0;margin:2px 0;font-size:clamp(11px,1vw,16px)}
+body.nature-fullscreen #gameScreen .player-buttons button{padding:clamp(3px,.7vh,10px) 0;font-size:clamp(19px,1.9vw,29px)}
+body.nature-fullscreen #gameScreen .gamecontrols{margin:0}
+body.nature-fullscreen #gameScreen .gamecontrols button{padding:clamp(5px,.8vh,11px) 14px}
+body.nature-fullscreen #setupScreen,body.nature-fullscreen #finalScreen,body.nature-fullscreen #joinPanel,body.nature-fullscreen #setupPanel,body.nature-fullscreen #endPanel{max-height:100%;overflow:hidden;margin:0 auto}
+body.nature-fullscreen #setupScreen{padding:clamp(7px,1vh,16px) 22px}
+body.nature-fullscreen #setupScreen .hero-icon,body.nature-fullscreen #setupScreen .schoolhint{display:none}
+body.nature-fullscreen #setupScreen h1{font-size:clamp(24px,3vw,38px);margin:0}
+body.nature-fullscreen #setupScreen .lead{margin:3px 0;line-height:1.2}
+body.nature-fullscreen #setupScreen .setupgrid,body.nature-fullscreen #setupScreen .playernames{margin:7px 0;gap:7px}
+body.nature-fullscreen #setupScreen h2,body.nature-fullscreen #setupScreen .center{margin:4px 0}
+body.nature-fullscreen #setupScreen select,body.nature-fullscreen #setupScreen input{padding:5px 8px}
+body.nature-fullscreen #finalScreen .trophy{font-size:34px}
+body.nature-fullscreen #finalScreen .ranking{margin:7px auto;gap:4px}
+body.nature-fullscreen #finalScreen .rankrow{padding:7px;font-size:clamp(16px,1.4vw,22px)}
+@media(max-height:670px){
+ body.nature-fullscreen #gameScreen .questionlabel{display:none}
+ body.nature-fullscreen #gameScreen .questionbox h2{font-size:clamp(19px,2.25vw,32px)}
+ body.nature-fullscreen #gameScreen .answer-option{font-size:clamp(15px,1.5vw,25px)}
+ body.nature-fullscreen #gameScreen .player-buttons button{padding:2px 0}
+ body.nature-fullscreen #questionPanel #questionText{font-size:clamp(20px,2.5vw,37px)}
+ body.nature-fullscreen #questionPanel #options button{font-size:clamp(16px,1.75vw,26px)}
+}

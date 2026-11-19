@@ -135,3 +135,15 @@ body.nature-fullscreen #finalScreen .rankrow{padding:7px;font-size:clamp(16px,1.
  body.nature-fullscreen #questionPanel #questionText{font-size:clamp(20px,2.5vw,37px)}
  body.nature-fullscreen #questionPanel #options button{font-size:clamp(16px,1.75vw,26px)}
 }
+
+/* 四人搶答：題目區改為深色文字及高對比淺色底板 */
+#gameScreen .questionbox{
+  background:linear-gradient(145deg,rgba(255,255,247,.98),rgba(233,247,240,.97))!important;
+  color:#183e35!important;
+  border-color:#bf9761!important;
+}
+#gameScreen .questionbox h2,
+#gameScreen #questionText{color:#173c34!important;text-shadow:none!important;font-weight:900}
+#gameScreen .questionbox .questionlabel{color:#365e52!important}
+#gameScreen .questionbox .difficulty{color:#25392e!important}
+#gameScreen .questionbox .feedback{color:#245748!important}

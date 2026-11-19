@@ -147,3 +147,9 @@ body.nature-fullscreen #finalScreen .rankrow{padding:7px;font-size:clamp(16px,1.
 #gameScreen .questionbox .questionlabel{color:#365e52!important}
 #gameScreen .questionbox .difficulty{color:#25392e!important}
 #gameScreen .questionbox .feedback{color:#245748!important}
+
+/* 四人搶答深色題目與選項：第三次修正版 */
+#gameScreen #questionText{color:#142f2a!important;-webkit-text-fill-color:#142f2a!important;text-shadow:none!important}
+#gameScreen #answerOptions .answer-option,
+#gameScreen #answerOptions .answer-option span,
+#gameScreen #answerOptions .answer-option b{color:#17332c!important;-webkit-text-fill-color:#17332c!important}

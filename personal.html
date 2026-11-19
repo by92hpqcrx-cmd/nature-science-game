@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>自然科學王｜免登入個人挑戰</title>
-<link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./cloud.css"><link rel="stylesheet" href="./nature-cute.css?v=20261119-real-8-bg">
+<link rel="stylesheet" href="./style.css"><link rel="stylesheet" href="./cloud.css"><link rel="stylesheet" href="./nature-cute.css?v=20261119-screen-large">
 </head><body>
 <header class="topbar"><div class="brand"><span class="brandicon">🧬</span><div><strong>自然科學王｜個人挑戰</strong><small>開啟直接答題・免帳號・免班級代碼</small></div></div>
-<nav class="topactions"><a href="./four-player.html">四人搶答</a><a href="./teacher.html">老師管理</a></nav></header>
+<nav class="topactions"><button id="fullscreenBtn" type="button" class="secondary" aria-pressed="false">⛶ 全螢幕</button><a href="./four-player.html">四人搶答</a><a href="./teacher.html">老師管理</a></nav></header>
 <main class="cloudmain">
 <p id="message" role="status" aria-live="polite"></p>
 <section class="panel cloudpanel hidden" id="joinPanel"><h1>班級記錄模式</h1><p>需要將個人成績儲存給老師查看時，才需要填寫班級代碼與姓名。</p>
@@ -18,4 +18,4 @@
 <h2 id="questionText" class="bigquestion"></h2><div id="options" class="cloudoptions"></div><p id="feedback" role="status" aria-live="polite"></p><button id="nextBtn" class="primary hidden">下一題</button>
 <div class="guest-footer"><span>訪客練習預設 10 題，成績僅顯示於本次畫面。</span><button id="classModeBtn" class="secondary" type="button">切換班級記錄模式</button></div></section>
 <section id="endPanel" class="panel cloudpanel hidden"><h1>🏆 挑戰完成！</h1><h2 id="result"></h2><p id="saveStatus" role="status"></p><button class="primary" id="again">再玩一次（免輸入）</button><button class="secondary" id="guestBtn">開始新的訪客挑戰</button></section>
-</main><script src="./supabase-config.js?v=20261108-2"></script><script src="./questions.js?v=20261119-u3-205"></script><script src="./personal.js?v=20261108-2" type="module"></script><script src="./nature-cute.js?v=20261119-real-8-bg"></script><script src="./unit3-cloud.js?v=20261120"></script></body></html>
+</main><script src="./supabase-config.js?v=20261108-2"></script><script src="./questions.js?v=20261119-u3-205"></script><script src="./personal.js?v=20261108-2" type="module"></script><script src="./nature-cute.js?v=20261119-screen-large"></script><script src="./unit3-cloud.js?v=20261120"></script></body></html>

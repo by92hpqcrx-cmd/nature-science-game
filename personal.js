@@ -1,6 +1,7 @@
 /* 自然科學王個人挑戰：預設零輸入訪客模式；班級模式保留原有雲端成績功能。 */
 const $ = id => document.getElementById(id);
-const localQuestions = Array.isArray(window.NATURE_QUESTIONS) ? window.NATURE_QUESTIONS : [];
+const localQuestions = Array.isArray(window.NATURE_QUESTIONS) ? [...window.NATURE_QUESTIONS] : [];
+window.addEventListener('nature:cloud-questions',e=>{const existing=new Set(localQuestions.map(q=>q.question.trim()));for(const q of e.detail||[])if(!existing.has(q.question.trim())){existing.add(q.question.trim());localQuestions.push(q)}poolStatus().catch(()=>{});});
 const units = {'01-01':'動物如何求生存','01-02':'動物具有社會行為嗎','01-03':'動物如何延續生命','02-01':'樂音與噪音有什麼不同','02-02':'樂器如何發出不同的聲音','02-03':'光有什麼特性與現象','03-01':'太陽的位置和四季有關嗎','03-02':'太陽系有哪些成員','03-03':'四季的星空有什麼不一樣','04-01':'空氣與燃燒有什麼關係','04-02':'燃燒的條件與如何滅火','04-03':'為何會生鏽與如何防鏽'};
 const sections = ['joinPanel','setupPanel','questionPanel','endPanel'];
 let mode='guest', cls=null, student='', qs=[], idx=0,score=0,correct=0,history=[],picked=false;

@@ -27,11 +27,13 @@ async function fetchPool(){const q=[...localQuestions];if(mode==='class'){
   const {sb}=await client();const {data,error}=await sb.from('nature_questions').select('id,unit,difficulty,topic,question,options,answer,explanation').eq('is_active',true).limit(1000);
   if(error){msg('雲端題目暫時無法載入，改用內建題庫。');}else{const ids=new Set(q.map(x=>String(x.id)));for(const d of data||[])if(!ids.has(String(d.id)))q.push(d);}
  }
- const filter=$('unitFilter').value;
- return q.filter(x=>(filter==='all'||String(x.unit).startsWith(filter))&&Array.isArray(x.options)&&x.options.length===4&&Number.isInteger(x.answer)&&x.answer>=0&&x.answer<=3);
+ const filter=$('unitFilter').value;const activity=$('activityFilter')?.value||'all';
+ return q.filter(x=>(filter==='all'||String(x.unit).startsWith(filter))&&(activity==='all'||x.unit===activity)&&Array.isArray(x.options)&&[2,4].includes(x.options.length)&&Number.isInteger(x.answer)&&x.answer>=0&&x.answer<x.options.length);
 }
 async function poolStatus(){const pool=await fetchPool();$('poolStatus').textContent=`可用題目：${pool.length} 題`;} 
-$('unitFilter').addEventListener('change',()=>poolStatus().catch(e=>msg(errText(e))));
+$('unitFilter').addEventListener('change',()=>{renderActivities();poolStatus().catch(e=>msg(errText(e)));});
+function renderActivities(){const u=$('unitFilter').value,sel=$('activityFilter');if(!sel)return;const before=sel.value;sel.replaceChildren();const all=document.createElement('option');all.value='all';all.textContent='全部活動';sel.append(all);Object.entries(units).filter(([k])=>u==='all'||k.startsWith(u)).forEach(([k,n])=>{let o=document.createElement('option');o.value=k;o.textContent=k+' '+n;sel.append(o)});sel.value=[...sel.options].some(o=>o.value===before)?before:'all';}
+$('activityFilter')?.addEventListener('change',()=>poolStatus().catch(e=>msg(errText(e))));
 async function startGame(){try{
   const pool=await fetchPool();if(!pool.length)throw Error('目前找不到可用題目，請檢查 questions.js 是否已上傳到網站。');
   const count=Number($('count').value)||10;qs=shuffle(pool).slice(0,count);idx=0;score=0;correct=0;history=[];msg('');show('questionPanel');round();
@@ -65,4 +67,4 @@ $('joinForm').addEventListener('submit',async e=>{e.preventDefault();$('joinSubm
  }catch(err){msg(errText(err));}finally{$('joinSubmit').disabled=false;}});
 /* 不等待 Supabase、不要求暱稱或班級代碼，網站開啟後立即出題。 */
 if(!localQuestions.length){msg('題庫檔案尚未載入，請確認 questions.js 與 personal.html 位於同一資料夾。');show('setupPanel');}
-else {show('setupPanel'); poolStatus().catch(e=>msg(errText(e)));}
+else {renderActivities();show('setupPanel'); poolStatus().catch(e=>msg(errText(e)));}

@@ -1,7 +1,7 @@
 /* 自然科學王可愛教室主題，不覆蓋既有答題功能 */
 :root{--bg:#eef9f2;--panel:#fffdf6;--text:#28443b;--sub:#577c70;--line:#badcd1;--gold:#e39c26;--accent:#2a9675;--red:#e86d77;--blue:#71b3e4;--green:#6abe9a;--yellow:#ffe09a}
 body{color:var(--text);background:linear-gradient(180deg,#bae9ff 0%,#e7faff 43%,#fff5df 44%,#f5e3bb 100%);background-attachment:fixed}
-body::before{content:"☁️       ☀️      ☁️";position:fixed;top:90px;left:0;width:100%;text-align:center;font-size:35px;opacity:.48;pointer-events:none;z-index:-1}
+body::before{content:"✦　☀　✧　☾　✦　☼　✧";position:fixed;inset:70px 0 auto;text-align:center;font-size:clamp(20px,3.5vw,40px);color:#fff6b7;opacity:.65;pointer-events:none;z-index:-1}
 .topbar{background:#ffffffd9;border-bottom:3px solid #c5e9d9;border-radius:0 0 22px 22px;max-width:none}
 .brand small{color:#63887f}.topactions a{display:inline-block;background:#e0f7e9!important;color:#28644e!important;border:2px solid #a5dec2!important;border-radius:20px;padding:9px 14px;text-decoration:none}
 .panel,.cloudpanel{background:linear-gradient(135deg,#fffef9f5,#e9faf2f5);border:3px solid #c0e8d2;border-radius:26px;box-shadow:0 10px 0 #b1d8c15c,0 18px 35px #405c4830}
@@ -13,16 +13,15 @@ body::before{content:"☁️       ☀️      ☁️";position:fixed;top:90px;l
 .answer-option.correct{background:#bff0cf;color:#17482f}.player{background:#fffef7}.player-score{color:#94661c}.player-status{color:#4d7469}.player-buttons button{color:#214337}
 .cloudoptions button{background:#fffef6;color:#31584b;border:3px solid #b4ddc2;border-radius:19px;text-align:left}.cloudoptions button:disabled{opacity:.8}.cloudoptions button.chosen{background:#fff0bd;border-color:#dda54d}
 .cloudmain #message{color:#ae614e}.guest-footer{border-color:#b7decf}.rankrow{background:#f0f9e9;border-color:#b2dec0}.rankrow:first-child{background:#ffe4a5}#championText{color:#c18b2b}
-.nature-scene{max-width:1050px;margin:14px auto 4px;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 18px;border-radius:25px;border:3px solid #b4d9bb;background:linear-gradient(0deg,#deedcc,#f6fff4);box-shadow:0 5px 0 #c5dcb9}
-.nature-pets{display:flex;gap:9px;align-items:center}.nature-pet{font-size:42px;display:inline-block;animation:natureHop 2.5s ease-in-out infinite}.nature-pet:nth-child(2){animation-delay:.45s}.nature-pet:nth-child(3){animation-delay:1s}
-.nature-control{display:flex;gap:7px;align-items:center;flex-wrap:wrap}.nature-control label{font-size:14px;font-weight:800;color:#3d7560}.nature-control select{padding:7px;border-radius:12px;border:2px solid #b4dec5;background:white;color:#33564c}
-@keyframes natureHop{50%{transform:translateY(-7px) rotate(4deg)}}
-body.scene-playground{background:linear-gradient(180deg,#afe5ff,#f1fff5 52%,#b4e3a8 53%,#d5efa8)}
-body.scene-space{background:linear-gradient(150deg,#283c78,#705b96 55%,#d6b7db);color:#254a43}
-body.scene-seaside{background:linear-gradient(180deg,#b5e9ff 0 47%,#8bddde 48% 64%,#ffedc5 65%)}
-@media(max-width:700px){.nature-scene{margin:8px 12px;flex-wrap:wrap}.nature-pet{font-size:32px}.nature-control{width:100%}.nature-control label{font-size:12px}.topbar{flex-wrap:wrap}.cloudmain{margin-top:10px}}
 
-/* 原創 SVG 教室場景：窗戶、綠色黑板、盆栽 */
-body:not(.scene-playground):not(.scene-space):not(.scene-seaside) .nature-scene{background:#e5f5dd url('./classroom-scene.svg') center / cover no-repeat;min-height:132px;align-items:flex-end;padding-bottom:8px}
-body:not(.scene-playground):not(.scene-space):not(.scene-seaside) .nature-scene .nature-control{background:#ffffffed;border:1px solid #c1e4d1;border-radius:13px;padding:6px}
-body:not(.scene-playground):not(.scene-space):not(.scene-seaside) .nature-pets{background:#ffffffcc;border-radius:18px;padding:3px 12px}
+/* 固定天空主題：太陽、月亮和星星；班寵僅作裝飾，不提供切換選單 */
+body{background:radial-gradient(circle at 83% 8%,#fff2a2 0 5%,transparent 17%),linear-gradient(180deg,#b4e4ff 0%,#d8edff 42%,#e7e1ff 76%,#fff4d9 100%);background-attachment:fixed}
+.nature-scene{max-width:1100px;margin:9px auto 8px;min-height:88px;padding:8px 22px;display:flex;justify-content:space-between;align-items:center;gap:14px;border:2px solid #c8e6ee;border-radius:22px;background:linear-gradient(120deg,#ecfaffed,#fff8dced 60%,#ebe3ffed);box-shadow:0 6px 18px #4b72951c;pointer-events:none}
+.nature-sky{font-size:clamp(22px,3vw,36px);white-space:nowrap;letter-spacing:.13em;filter:drop-shadow(0 2px 1px #fff)}
+.nature-pets{display:flex;align-items:end;justify-content:center;gap:5px;flex-shrink:0}
+.nature-pet{display:inline-flex;align-items:center;justify-content:center;width:53px;height:59px;font-size:40px;animation:natureHop 3.5s ease-in-out infinite}
+.nature-pet img{display:block;width:52px;height:52px;object-fit:contain}
+.nature-pet:nth-child(2){animation-delay:.5s}.nature-pet:nth-child(3){animation-delay:1s}.nature-pet:nth-child(4){animation-delay:1.5s}.nature-pet:nth-child(5){animation-delay:2s}
+@keyframes natureHop{50%{transform:translateY(-4px)}}
+@media(max-width:700px){.nature-scene{margin:7px 10px;padding:8px 10px;min-height:72px;gap:7px;flex-wrap:wrap;justify-content:center}.nature-sky{font-size:25px}.nature-pets{gap:2px}.nature-pet{width:40px;height:43px;font-size:30px}.nature-pet img{width:39px;height:39px}.topbar{flex-wrap:wrap}.cloudmain{margin-top:10px}}
+@media(prefers-reduced-motion:reduce){.nature-pet{animation:none}}

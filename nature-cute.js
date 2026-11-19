@@ -1,1 +1,20 @@
-(()=>{const names={dino:'🦖',bear:'🐻',cat:'🐱',rabbit:'🐰',panda:'🐼','501':'🐧','502':'🐰','503':'🐿️','504':'🐦','505':'🐱','506':'🐶','507':'🐘'};const labels={dino:'小恐龍',bear:'小熊',cat:'小貓',rabbit:'小兔',panda:'熊貓','501':'企鵝','502':'兔兔','503':'松鼠','504':'小鳥','505':'貓貓','506':'小狗','507':'大象'};let pet=localStorage.getItem('nature-pet')||'dino';if(pet==='dinosaur')pet='dino';let scene=localStorage.getItem('nature-scene')||'classroom';const bar=document.createElement('section');bar.className='nature-scene';bar.setAttribute('aria-label','教室背景與班寵設定');const pets=document.createElement('div');pets.className='nature-pets';const ctrl=document.createElement('div');ctrl.className='nature-control';const petLabel=document.createElement('label');petLabel.textContent='🐾 班寵 ';const petSel=document.createElement('select');petSel.setAttribute('aria-label','選擇班寵');Object.entries(names).forEach(([key,val])=>{const op=document.createElement('option');op.value=key;op.textContent=val+' '+labels[key];petSel.append(op)});petLabel.append(petSel);const sceneLabel=document.createElement('label');sceneLabel.textContent='🏫 背景 ';const sceneSel=document.createElement('select');sceneSel.setAttribute('aria-label','選擇教室背景');Object.entries({classroom:'可愛教室',playground:'操場',space:'太空',seaside:'海邊'}).forEach(([key,v])=>{let o=document.createElement('option');o.value=key;o.textContent=v;sceneSel.append(o)});sceneLabel.append(sceneSel);ctrl.append(petLabel,sceneLabel);bar.append(pets,ctrl);document.querySelector('.topbar')?.after(bar);function render(){petSel.value=pet;sceneSel.value=scene;document.body.classList.remove('scene-playground','scene-space','scene-seaside');if(scene!=='classroom')document.body.classList.add('scene-'+scene);pets.replaceChildren();[pet,'rabbit','panda'].forEach(p=>{const el=document.createElement('span');el.className='nature-pet';el.title=labels[p]||'班寵';const img=document.createElement('img');img.src='https://by92hpqcrx-cmd.github.io/science-fundesk/class-pets/'+p+'.svg';img.alt=labels[p]||'班寵';img.loading='lazy';img.width=68;img.height=68;img.onerror=()=>{img.remove();el.textContent=names[p]||'🐾'};el.append(img);pets.append(el)})}petSel.addEventListener('change',()=>{pet=petSel.value;localStorage.setItem('nature-pet',pet);render()});sceneSel.addEventListener('change',()=>{scene=sceneSel.value;localStorage.setItem('nature-scene',scene);render()});render()})();
+(()=>{'use strict';
+function decorate(){
+ const header=document.querySelector('.topbar');
+ if(!header||document.querySelector('.nature-scene'))return;
+ document.body.classList.remove('scene-playground','scene-space','scene-seaside');
+ const scene=document.createElement('section');scene.className='nature-scene';scene.setAttribute('aria-label','太陽、月亮、星星與班寵裝飾');
+ const sky=document.createElement('div');sky.className='nature-sky';sky.setAttribute('aria-hidden','true');sky.textContent='☀️　⭐　🌙　✨　🌟';
+ const pets=document.createElement('div');pets.className='nature-pets';pets.setAttribute('aria-label','可愛班寵裝飾');
+ const items=[['dino','🦖','小恐龍'],['bear','🐻','小熊'],['rabbit','🐰','小兔'],['panda','🐼','熊貓'],['cat','🐱','小貓']];
+ for(const [id,emoji,name] of items){
+   const wrapper=document.createElement('span');wrapper.className='nature-pet';wrapper.title=name;
+   const img=document.createElement('img');img.alt=name;img.width=52;img.height=52;img.loading='lazy';
+   img.src='https://by92hpqcrx-cmd.github.io/science-fundesk/class-pets/'+id+'.svg';
+   img.onerror=()=>{img.remove();wrapper.textContent=emoji};
+   wrapper.append(img);pets.append(wrapper);
+ }
+ scene.append(sky,pets);header.after(scene);
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',decorate,{once:true});else decorate();
+})();

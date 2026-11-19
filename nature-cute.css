@@ -25,3 +25,24 @@ body{background:radial-gradient(circle at 83% 8%,#fff2a2 0 5%,transparent 17%),l
 @keyframes natureHop{50%{transform:translateY(-4px)}}
 @media(max-width:700px){.nature-scene{margin:7px 10px;padding:8px 10px;min-height:72px;gap:7px;flex-wrap:wrap;justify-content:center}.nature-sky{font-size:25px}.nature-pets{gap:2px}.nature-pet{width:40px;height:43px;font-size:30px}.nature-pet img{width:39px;height:39px}.topbar{flex-wrap:wrap}.cloudmain{margin-top:10px}}
 @media(prefers-reduced-motion:reduce){.nature-pet{animation:none}}
+
+/* 與 FunDesk 動態教室共用 8 張原始場景圖；每次開啟遊戲隨機選取其中一張。 */
+html{min-height:100%;background-color:#e8f5f3}
+body{
+ background-image:linear-gradient(rgba(244,250,255,.29),rgba(244,250,255,.36)),var(--nature-scene-background,linear-gradient(#bee8ff,#eff9ff))!important;
+ background-position:center center!important;
+ background-size:cover!important;
+ background-repeat:no-repeat!important;
+ background-attachment:fixed!important;
+}
+body::before{content:none!important}
+.nature-scene{
+ background-image:linear-gradient(90deg,rgba(255,255,255,.79),rgba(255,255,255,.54)),var(--nature-scene-background,linear-gradient(#e7f7ff,#fff6e3))!important;
+ background-position:center 45%!important;
+ background-size:cover!important;
+ background-repeat:no-repeat!important;
+ justify-content:flex-end!important;
+}
+.nature-sky{display:none!important}
+.panel,.cloudpanel{background:linear-gradient(135deg,rgba(255,254,249,.96),rgba(233,250,242,.95))!important}
+@media(max-width:700px){body{background-attachment:scroll!important}}

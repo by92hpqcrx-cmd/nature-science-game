@@ -2,7 +2,7 @@
 const $=id=>document.getElementById(id);
 let questions=Array.isArray(window.NATURE_QUESTIONS)?[...window.NATURE_QUESTIONS]:[];
 window.addEventListener('nature:cloud-questions',e=>{const ids=new Set(questions.map(q=>String(q.id)));for(const q of e.detail||[])if(!ids.has(String(q.id))){questions.push(q);ids.add(String(q.id));}updatePool();});
-const unitNames={'01-01':'動物如何求生存','01-02':'動物具有社會行為嗎','01-03':'動物如何延續生命','02-01':'樂音與噪音有什麼不同','02-02':'樂器如何發出不同的聲音','02-03':'光有什麼特性與現象'};
+const unitNames={'01-01':'動物如何求生存','01-02':'動物具有社會行為嗎','01-03':'動物如何延續生命','02-01':'樂音與噪音有什麼不同','02-02':'樂器如何發出不同的聲音','02-03':'光有什麼特性與現象','03-01':'太陽的位置和四季有關嗎','03-02':'太陽系有哪些成員','03-03':'四季的星空有什麼不一樣','04-01':'空氣與燃燒有什麼關係','04-02':'燃燒的條件與如何滅火','04-03':'為何會生鏽與如何防鏽'};
 const colors=['#fb7292','#64b7ff','#68e1b2','#ffdc70'],icons=['🦊','🐳','🐸','🦁'];
 let game=null,interval=null;
 function pool(){return questions.filter(q=>($('unitSelect').value==='all'||q.unit.startsWith($('unitSelect').value))&&($('difficulty').value==='all'||q.difficulty===$('difficulty').value));}

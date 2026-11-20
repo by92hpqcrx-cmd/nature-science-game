@@ -12,7 +12,7 @@ const stamp=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Taipei'});
 const gameId=()=>crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2);
 const getUnits=()=> $('subject').value==='math'?mathUnits:units;
 const shuffle=ar=>{const a=[...ar];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
-function show(id){['setup','game','finished'].forEach(k=>$(k).classList.toggle('hidden',k!==id));}
+function show(id){['setup','game','finished','tabletHost'].forEach(k=>$(k).classList.toggle('hidden',k!==id));}
 function pool(){return questions.filter(q=>q.subject===$('subject').value&&($('unit').value==='all'||String(q.unit).startsWith($('unit').value))&&($('activity').value==='all'||q.unit===$('activity').value)&&Array.isArray(q.options)&&q.options.length>=2&&Number.isInteger(q.answer)&&q.answer>=0&&q.answer<q.options.length);}
 function refreshUnits(){
  const old=$('unit').value,values=$('subject').value==='math'?[['all','全部單元'],['9','第九單元・乘法'],['10','第十單元・平面圖形']]:[['all','全部單元'],['01','第一單元・動物世界'],['02','第二單元・探索聲光世界'],['03','第三單元・神祕的天空'],['04','第四單元・燃燒與生鏽']];
@@ -32,6 +32,8 @@ function renderPlayers(){
  const c=classList();
  const eligible=c?.students||[];
  selected=selected.filter(id=>eligible.some(s=>String(s.id)===String(id)));
+ $('playerPick').classList.toggle('hidden',mode==='tablet');
+ $('tabletClassHint').classList.toggle('hidden',mode!=='tablet');
  $('playerPick').replaceChildren();
  for(const s of eligible){
   const b=document.createElement('button');b.type='button';b.className='student'+(selected.includes(String(s.id))?' selected':'');
@@ -52,9 +54,9 @@ function setMode(m){
  mode=m;selected=[];
  document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('picked',b.dataset.mode===m));
  $('rosterArea').classList.toggle('hidden',m==='practice');
- $('duration').parentElement.classList.toggle('hidden',m!=='competition');
+ $('duration').parentElement.classList.toggle('hidden',m!=='competition'&&m!=='tablet');
  $('connection').textContent=m==='practice'?'🌱 個人練習免登入，成績不寫入 FunDesk。':
- connected?'✅ 已連接 FunDesk。請選班級與學生；結束時儲存成績。':
+ connected?(m==='tablet'?'✅ 已連接 FunDesk。請選班級後建立 QR Code 等待學生加入。':'✅ 已連接 FunDesk。請選班級與學生；結束時儲存成績。'):
  '🔒 請從已登入的 FunDesk「自然科學王」捷徑開啟，才能使用學生計分與競賽。';
  renderPlayers();
 }
@@ -87,6 +89,12 @@ window.addEventListener('nature:cloud-questions',e=>{
  refreshActivities();
 });
 function start(){
+ if(mode==='tablet'){
+  if(!connected){alert('平板模式請由已登入的 FunDesk 開啟。');return}
+  if(!window.FunDeskKingTablet){alert('平板競賽模組仍在載入，請檢查網路後重試。');return}
+  window.FunDeskKingTablet.start({classroom:classList(),questions:shuffle(pool()).slice(0,Math.min(Number($('count').value)||10,pool().length)),subject:$('subject').value,duration:Number($('duration').value)||20,token,show});
+  return;
+ }
  if(mode!=='practice'&&!connected){alert('個人計分與班級競賽需由已登入的 FunDesk 開啟');return;}
  const c=classList();
  if(mode==='score'&&selected.length!==1){alert('請選一位學生');return;}
@@ -200,6 +208,12 @@ $('classSelect').onchange=()=>{selected=[];renderPlayers()};
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 $('start').onclick=start;$('reveal').onclick=reveal;$('next').onclick=next;
 $('again').onclick=()=>{endClock();show('setup');selected=[];renderPlayers();};
+$('quitGame').onclick=()=>{
+ if(!round||!confirm('確定中斷這次挑戰？這一局不記錄任何成績或獎勵。'))return;
+ endClock();round=null;submitted=false;
+ show('setup');$('feedback').textContent='';
+};
+
 $('fullBtn').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(e){alert('目前瀏覽器無法進入全螢幕')}}; 
 refreshUnits();setMode('practice');
 })();

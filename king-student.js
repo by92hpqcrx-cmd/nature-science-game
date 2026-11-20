@@ -29,11 +29,12 @@ async function connect(){
   if(p.type==='result'){
    if(p.id!==questionId)return;
    score=p.score;$('studentScore').textContent='目前 '+score+' 分';
-   $('studentFeedback').textContent=p.ok?'🎉 答對了！+100 分':'💪 答錯了，下一題加油！';
+   $('studentFeedback').textContent=p.passed?'✅ 已結束本題，不計分；等待下一題。':p.ok?'🎉 答對了！+100 分':'💪 答錯了，下一題加油！';
    $('myCurrentScore').textContent='目前 '+score+' 分';return;
   }
   if(p.type==='reveal'){
    if(p.id!==questionId)return;
+   answered=true;$('endAnswer').disabled=true;
    [...$('studentOptions').children].forEach(b=>b.disabled=true);
    $('studentFeedback').textContent+='　正確答案：'+(p.correct+1)+(p.explanation?'。 '+p.explanation:'');
    return;
@@ -67,13 +68,14 @@ function renderQuestion(q){
   const b=document.createElement('button');b.type='button';b.textContent=(i+1)+'. '+o;
   b.onclick=()=>{
    if(answered||Date.now()>deadline)return;
-   answered=true;b.classList.add('correct');
+   answered=true;$('endAnswer').disabled=true;b.classList.add('correct');
    [...$('studentOptions').children].forEach(x=>x.disabled=true);
    $('studentFeedback').textContent='✅ 已送出答案，等待老師確認分數…';
    send({type:'answer',questionId,choice:i});
   };
   $('studentOptions').append(b);
  });
+ $('endAnswer').disabled=false;
  show('playing');setRemaining();
 }
 function setRemaining(){
@@ -82,10 +84,18 @@ function setRemaining(){
  if(scheduledId!==questionId||$('playing').classList.contains('hidden'))return;
  $('studentRemaining').textContent='⏱ '+Math.max(0,Math.ceil((deadline-Date.now())/1000))+' 秒';
  if(Date.now()<deadline)setTimeout(refresh,250);
- else [...$('studentOptions').children].forEach(b=>b.disabled=true);
+ else {answered=true;$('endAnswer').disabled=true;[...$('studentOptions').children].forEach(b=>b.disabled=true);}
  };
  refresh();
 }
+$('endAnswer').onclick=()=>{
+ if(!joined||phase!=='running'||answered||Date.now()>deadline)return;
+ if(!confirm('確定結束這一題嗎？這題不計分，仍可繼續參加下一題。'))return;
+ answered=true;$('endAnswer').disabled=true;
+ [...$('studentOptions').children].forEach(b=>b.disabled=true);
+ $('studentFeedback').textContent='✅ 已結束本題，不計分，等待下一題…';
+ send({type:'pass',questionId});
+};
 $('joinForm').onsubmit=e=>{
  e.preventDefault();const no=Number($('seatNumber').value);
  if(!Number.isInteger(no)||no<1||no>99)return message('請輸入正確座號');

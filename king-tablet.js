@@ -9,6 +9,9 @@ function ranking(){
  let a=order();$('tabletTop3').innerHTML=a.length?a.slice(0,3).map((p,i)=>'<div class="tabletRank">'+['🥇','🥈','🥉'][i]+' '+esc(p.no)+'號 '+esc(p.name)+' <b>'+p.score+'分</b></div>').join(''):'目前尚無得分';
  $('tabletPlayerCount').textContent='已加入 '+members.size+' 位｜已作答 '+a.length+' 位';
  $('tabletRoster').textContent=[...members.values()].sort((a,b)=>a.no-b.no).map(p=>p.no+'號 '+p.name).join('、');
+ if(game?.token&&window.opener&&!window.opener.closed){
+  window.opener.postMessage({kind:'fundesk-king-live',token:game.token,top3:a.slice(0,3).map(p=>({no:p.no,name:p.name,score:p.score}))},location.origin);
+ }
 }
 const question=()=>phase==='running'?{id:game.questionId,index:game.index+1,total:game.questions.length,text:game.questions[game.index].question,options:game.questions[game.index].options,deadline:game.deadline}:null;
 async function handle(p){
@@ -66,6 +69,7 @@ async function finish(){
  if(!game||phase==='ended'||phase==='aborted')return;
  const a=order();if(!a.length){$('tabletStatus').textContent='尚無學生作答，不可結算獎勵';return}
  clearInterval(tick);phase='ended';send({type:'ended',ranking:a.map(x=>({no:x.no,name:x.name,score:x.score}))});
+ if(game?.token&&window.opener&&!window.opener.closed)window.opener.postMessage({kind:'fundesk-king-closed',token:game.token},location.origin);
  game.show('finished');
  $('ranking').innerHTML=a.map((p,i)=>'<div class="rankLine"><b>'+(['🥇','🥈','🥉'][i]||'🏅')+' '+esc(p.no)+'號 '+esc(p.name)+'</b><span>'+p.score+'分</span></div>').join('');
  $('saveStatus').textContent='⏳ 正在寫入 FunDesk 並發放名次獎勵…';
@@ -77,6 +81,7 @@ async function finish(){
 async function stop(abort){
  clearInterval(tick);tick=null;
  if(abort&&channel)await send({type:'aborted'});
+ if(game?.token&&window.opener&&!window.opener.closed)window.opener.postMessage({kind:'fundesk-king-closed',token:game.token},location.origin);
  phase=abort?'aborted':'ended';
  if(channel){await sb.removeChannel(channel).catch(()=>{});channel=null}
  game=null;members.clear();
@@ -93,7 +98,7 @@ async function start({classroom,questions,subject,duration,token,show}){
  members.clear();phase='lobby';show('tabletHost');
  $('tabletHostClass').textContent=classroom.label;$('tabletQR').replaceChildren();
  $('tabletJoinURL').textContent=url.href;
- if(window.QRCode)new QRCode($('tabletQR'),{text:url.href,width:156,height:156});
+ if(window.QRCode)new window.QRCode($('tabletQR'),{text:url.href,width:156,height:156});
  else $('tabletQR').textContent='QR Code 未載入，請使用下方網址';
  $('tabletStartNow').classList.remove('hidden');$('tabletStartNow').disabled=true;
  $('tabletFinish').disabled=true;$('tabletNext').classList.add('hidden');

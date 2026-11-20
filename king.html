@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>自然科學王｜FunDesk 三大模式</title>
+<link rel="stylesheet" href="./king.css?v=20261121-1"></head><body>
+<div id="fireworks" aria-hidden="true"></div>
+<main class="shell">
+<header class="brand"><span class="brandIcon">🦖</span><div><strong>自然科學王</strong><small>FunDesk 班級科學挑戰</small></div><button type="button" id="fullBtn" class="small">⛶ 全螢幕</button></header>
+<section id="setup" class="chalkboard">
+<div class="chalkCorner tl">⭐</div><div class="chalkCorner tr">🌟</div>
+<div class="chalkArt" aria-hidden="true">🐻 🐰 🦊 🐼</div>
+<h1>🔬 自然科學王</h1><p class="subtitle">選擇你今天的挑戰模式！</p>
+<div class="modes">
+<button class="mode picked" data-mode="practice"><b>🌱 個人練習</b><span>免登入・不記錄成績</span></button>
+<button class="mode" data-mode="score"><b>🏅 個人計分</b><span>保存到 FunDesk 學生紀錄</span></button>
+<button class="mode" data-mode="competition"><b>🏆 班級競賽</b><span>2～4 人競賽・第一名 +2 點</span></button>
+</div>
+<div id="connection" class="connection" aria-live="polite">個人練習可直接開始；計分與競賽請從已登入的 FunDesk 開啟。</div>
+<div id="rosterArea" class="roster hidden"><label>FunDesk 班級<select id="classSelect"></select></label><div id="playerPick" class="playerPick"></div></div>
+<div class="settings">
+<label>科目<select id="subject"><option value="science">🌿 自然</option><option value="math">🔢 數學</option></select></label>
+<label>單元<select id="unit"></select></label>
+<label>活動<select id="activity"></select></label>
+<label>題數<select id="count"><option value="5">5 題</option><option value="10" selected>10 題</option><option value="15">15 題</option><option value="20">20 題</option></select></label>
+<label>競賽每題時間<select id="duration"><option value="15">15 秒</option><option value="20" selected>20 秒</option><option value="30">30 秒</option><option value="45">45 秒</option></select></label>
+</div>
+<p id="poolInfo" class="subnote"></p>
+<button id="start" class="start">🚀 開始挑戰</button>
+</section>
+<section id="game" class="chalkboard hidden">
+<div class="gameTop"><span id="modeLabel"></span><span id="progress"></span><span id="timer"></span></div>
+<p id="topic"></p><h2 id="question"></h2>
+<div id="options" class="options"></div><p id="feedback" class="feedback" aria-live="polite"></p>
+<div id="contestants" class="contestants hidden"></div>
+<div class="gameControls"><button id="reveal" class="small hidden">公布答案</button><button id="next" class="start hidden">下一題</button></div>
+</section>
+<section id="finished" class="chalkboard hidden"><h1>🎉 挑戰完成！</h1><div id="ranking"></div><p id="saveStatus" aria-live="polite"></p><button id="again" class="start">🔄 回到模式選擇</button></section>
+</main>
+<script src="./questions.js?v=20261119-u3-205"></script><script src="./math-questions.js?v=20261120"></script>
+<script src="./king.js?v=20261121-1"></script><script src="./unit3-cloud.js?v=20261120"></script>
+</body></html>

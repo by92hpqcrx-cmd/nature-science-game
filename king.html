@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>自然科學王｜FunDesk 三大模式</title>
+<title>自然科學王｜FunDesk 四大模式</title>
 <link rel="stylesheet" href="./king.css?v=20261121-1"></head><body>
 <div id="fireworks" aria-hidden="true"></div>
 <main class="shell">
-<header class="brand"><span class="brandIcon">🦖</span><div><strong>自然科學王</strong><small>FunDesk 班級科學挑戰</small></div><button type="button" id="fullBtn" class="small">⛶ 全螢幕</button></header>
+<header class="brand"><span class="brandIcon">🦖</span><div><strong>自然科學王</strong><small>FunDesk 四種科學挑戰模式</small></div><button type="button" id="fullBtn" class="small">⛶ 全螢幕</button></header>
 <section id="setup" class="chalkboard">
 <div class="chalkCorner tl">⭐</div><div class="chalkCorner tr">🌟</div>
 <div class="chalkArt" aria-hidden="true">🐻 🐰 🦊 🐼</div>
@@ -13,9 +13,10 @@
 <button class="mode picked" data-mode="practice"><b>🌱 個人練習</b><span>免登入・不記錄成績</span></button>
 <button class="mode" data-mode="score"><b>🏅 個人計分</b><span>保存到 FunDesk 學生紀錄</span></button>
 <button class="mode" data-mode="competition"><b>🏆 班級競賽</b><span>2～4 人競賽・第一名 +2 點</span></button>
+<button class="mode" data-mode="tablet"><b>📱 平板模式</b><span>掃描 QR Code 同時作答・前三名 +5／+3／+1 點</span></button>
 </div>
 <div id="connection" class="connection" aria-live="polite">個人練習可直接開始；計分與競賽請從已登入的 FunDesk 開啟。</div>
-<div id="rosterArea" class="roster hidden"><label>FunDesk 班級<select id="classSelect"></select></label><div id="playerPick" class="playerPick"></div></div>
+<div id="rosterArea" class="roster hidden"><label>FunDesk 班級<select id="classSelect"></select></label><div id="playerPick" class="playerPick"></div><div id="tabletClassHint" class="hidden">📱 平板模式會開啟教室 QR Code，學生用平板掃碼加入。</div></div>
 <div class="settings">
 <label>科目<select id="subject"><option value="science">🌿 自然</option><option value="math">🔢 數學</option></select></label>
 <label>單元<select id="unit"></select></label>
@@ -31,10 +32,24 @@
 <p id="topic"></p><h2 id="question"></h2>
 <div id="options" class="options"></div><p id="feedback" class="feedback" aria-live="polite"></p>
 <div id="contestants" class="contestants hidden"></div>
-<div class="gameControls"><button id="reveal" class="small hidden">公布答案</button><button id="next" class="start hidden">下一題</button></div>
+<div class="gameControls"><button id="quitGame" class="small quitAction" type="button">✕ 中斷退出（不計成績）</button><button id="reveal" class="small hidden">公布答案</button><button id="next" class="start hidden">下一題</button></div>
 </section>
+<section id="tabletHost" class="chalkboard hidden">
+ <div class="gameTop"><strong>📱 平板即時競賽 <span id="tabletHostClass"></span></strong><button id="tabletAbort" type="button" class="small quitAction">✕ 中斷退出（不計成績）</button></div>
+ <p id="tabletStatus" aria-live="polite">正在建立教室…</p>
+ <div class="tabletHostGrid">
+  <section class="tabletJoinCard"><div id="tabletQR"></div><div class="tabletURL" id="tabletJoinURL"></div><small>學生掃描後輸入座號，等待老師開賽；開賽後仍可加入</small></section>
+  <div class="tabletLiveBoard"><h2>🏆 目前前三名</h2><div id="tabletTop3">尚未開始競賽</div><p id="tabletPlayerCount">已加入 0 人</p><div id="tabletRoster"></div></div>
+ </div>
+ <div class="tabletQuestionPanel">
+  <div class="gameTop"><span id="tabletRound">老師可以隨時開始</span><span id="tabletCountdown"></span></div>
+  <h2 id="tabletQuestion">學生可先掃 QR Code 加入</h2>
+  <div id="tabletAnswers"></div><p id="tabletExplain"></p>
+ </div>
+ <div class="tabletHostControls"><button id="tabletStartNow" class="start" type="button">▶ 開始競賽</button><button id="tabletNext" class="small hidden" type="button">下一題 ➜</button><button id="tabletFinish" class="small" type="button" disabled>🏁 結束競賽並結算</button></div>
+ </section>
 <section id="finished" class="chalkboard hidden"><h1>🎉 挑戰完成！</h1><div id="ranking"></div><p id="saveStatus" aria-live="polite"></p><button id="again" class="start">🔄 回到模式選擇</button></section>
 </main>
 <script src="./supabase-config.js?v=20261121"></script><script src="./questions.js?v=20261119-u3-205"></script><script src="./math-questions.js?v=20261120"></script>
-<script src="./king.js?v=20261121-1"></script><script src="./unit3-cloud.js?v=20261120"></script>
+<script src="./king.js?v=20261121-2"></script><script type="module" src="./king-tablet.js?v=20261121-2"></script><script src="./unit3-cloud.js?v=20261120"></script><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </body></html>

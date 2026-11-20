@@ -7,7 +7,7 @@ const send=async d=>{if(channel)try{await channel.send({type:'broadcast',event:'
 const order=()=>[...members.values()].filter(x=>x.answered).sort((a,b)=>b.score-a.score||b.correct-a.correct||a.latency-b.latency||a.no-b.no);
 function ranking(){
  let a=order();$('tabletTop3').innerHTML=a.length?a.slice(0,3).map((p,i)=>'<div class="tabletRank">'+['🥇','🥈','🥉'][i]+' '+esc(p.no)+'號 '+esc(p.name)+' <b>'+p.score+'分</b></div>').join(''):'目前尚無得分';
- $('tabletPlayerCount').textContent='已加入 '+members.size+' 位｜已作答 '+a.length+' 位';
+ $('tabletPlayerCount').textContent='已加入 '+members.size+' 位｜本題已完成 '+(phase==='running'?[...members.values()].filter(x=>x.last===game?.questionId).length:0)+' 位';
  $('tabletRoster').textContent=[...members.values()].sort((a,b)=>a.no-b.no).map(p=>p.no+'號 '+p.name).join('、');
  if(game?.token&&window.opener&&!window.opener.closed){
   window.opener.postMessage({kind:'fundesk-king-live',token:game.token,top3:a.slice(0,3).map(p=>({no:p.no,name:p.name,score:p.score}))},location.origin);

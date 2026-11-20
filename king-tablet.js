@@ -18,7 +18,7 @@ async function handle(p){
  if(!game||!p||phase==='aborted'||phase==='ended')return;
  const client=String(p.client||'');if(!/^[a-z0-9-]{16,100}$/i.test(client))return;
  if(p.type==='sync'){send({type:'state',to:client,phase,question:question(),label:game.label});return}
- if(p.type==='leave'){if(members.delete(client)){ranking();$('tabletStatus').textContent='有學生退出，現有 '+members.size+' 位已加入';}return}
+ if(p.type==='leave'){if(members.delete(client)){ranking();$('tabletStatus').textContent='有學生退出，現有 '+members.size+' 位已加入';checkAllDone();}return}
  if(p.type==='join'){
   const no=Number(p.no),s=game.students.find(x=>Number(x.no)===no);
   if(!s||!Number.isInteger(no)||[...members.values()].some(x=>x.no===no&&x.client!==client)){
@@ -30,13 +30,22 @@ async function handle(p){
   ranking();$('tabletStatus').textContent='已連線 '+members.size+' 位學生，老師可以隨時開始';
   return;
  }
- if(p.type!=='answer'||phase!=='running'||game.locked||p.questionId!==game.questionId)return;
+ if(!['answer','pass'].includes(p.type)||phase!=='running'||game.locked||p.questionId!==game.questionId)return;
  const s=members.get(client),q=game.questions[game.index],choice=Number(p.choice);
- if(!s||s.last===game.questionId||!Number.isInteger(choice)||choice<0||choice>=q.options.length||Date.now()>game.deadline)return;
- s.last=game.questionId;s.answered++;
- const yes=choice===q.answer;if(yes){s.score+=100;s.correct++;s.latency+=Date.now()-(game.deadline-game.duration*1000)}
- send({type:'result',to:client,id:game.questionId,ok:yes,score:s.score,delta:yes?100:0});
+ if(!s||s.last===game.questionId||Date.now()>game.deadline)return;
+ const pass=p.type==='pass';
+ if(!pass&&(!Number.isInteger(choice)||choice<0||choice>=q.options.length))return;
+ s.last=game.questionId;
+ if(!pass)s.answered++;
+ const yes=!pass&&choice===q.answer;
+ if(yes){s.score+=100;s.correct++;s.latency+=Date.now()-(game.deadline-game.duration*1000)}
+ send({type:'result',to:client,id:game.questionId,ok:yes,passed:pass,score:s.score,delta:yes?100:0});
  ranking();send({type:'top3',scores:order().slice(0,3).map(x=>({name:x.name,no:x.no,score:x.score}))});
+ checkAllDone();
+}
+function checkAllDone(){
+ if(!game||phase!=='running'||game.locked||!members.size)return;
+ if([...members.values()].every(s=>s.last===game.questionId))closeRound('all');
 }
 function drawQuestion(){
  let q=game.questions[game.index];
@@ -45,12 +54,12 @@ function drawQuestion(){
  $('tabletAnswers').innerHTML=q.options.map((o,i)=>'<div class="tabletAnswer">'+(i+1)+'. '+esc(o)+'</div>').join('');
  $('tabletExplain').textContent='';
 }
-function closeRound(){
+function closeRound(reason='time'){
  if(!game||phase!=='running'||game.locked)return;
  game.locked=true;clearInterval(tick);tick=null;
  const q=game.questions[game.index];
  $('tabletExplain').textContent='✅ 正確答案：'+(q.answer+1)+'. '+q.options[q.answer]+(q.explanation?'\n'+q.explanation:'');
- $('tabletCountdown').textContent='時間到／本題結束';
+ $('tabletCountdown').textContent=reason==='all'?'✅ 全班完成本題':reason==='skip'?'⏭️ 老師已跳題':'⏱ 時間到／本題結束';
  $('tabletAnswers').children[q.answer]?.classList.add('right');
  $('tabletNext').classList.remove('hidden');
  $('tabletNext').textContent=game.index+1===game.questions.length?'🏁 結算競賽':'下一題 ➜';
@@ -60,6 +69,7 @@ function startRound(){
  if(!game||phase==='aborted'||phase==='ended')return;
  if(game.index>=game.questions.length){finish();return}
  phase='running';game.locked=false;game.questionId='q'+game.index+'-'+game.id;
+ $('tabletNext').classList.remove('hidden');$('tabletNext').textContent=game.index+1===game.questions.length?'🏁 結算競賽':'⏭️ 下一題（可直接跳題）';
  game.deadline=Date.now()+game.duration*1000;drawQuestion();send({type:'question',question:question()});
  clearInterval(tick);tick=setInterval(()=>{
   const left=Math.max(0,game.deadline-Date.now());
@@ -116,7 +126,11 @@ async function start({classroom,questions,subject,duration,token,show}){
  });
 }
 $('tabletStartNow').onclick=()=>{if(!game||phase!=='lobby')return;$('tabletStartNow').classList.add('hidden');$('tabletFinish').disabled=false;startRound()};
-$('tabletNext').onclick=()=>{if(!game||!game.locked)return;$('tabletNext').classList.add('hidden');game.index++;startRound()};
+$('tabletNext').onclick=()=>{
+ if(!game||phase!=='running')return;
+ if(!game.locked)closeRound('skip');
+ $('tabletNext').classList.add('hidden');game.index++;startRound();
+};
 $('tabletFinish').onclick=()=>{if(game&&phase==='running'&&confirm('結束競賽並儲存目前成績？'))finish()};
 $('tabletAbort').onclick=async()=>{if(!game||!confirm('中斷競賽後不記錄任何成績或獎勵，確定？'))return;const show=game.show;await stop(true);show('setup')};
 window.FunDeskKingTablet={start,stop};

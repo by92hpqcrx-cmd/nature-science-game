@@ -17,7 +17,7 @@ async function handle(p){
  if(p.type==='sync'){send({type:'state',to:client,phase,question:question(),label:game.label});return}
  if(p.type==='join'){
   const no=Number(p.no),s=game.students.find(x=>Number(x.no)===no);
-  if(!s||!Number.isInteger(no)||members.values().some(x=>x.no===no&&x.client!==client)){
+  if(!s||!Number.isInteger(no)||[...members.values()].some(x=>x.no===no&&x.client!==client)){
    send({type:'admitted',to:client,ok:false,error:s?'座號已被其他裝置使用':'找不到這個座號'});return;
   }
   if(!members.has(client))members.set(client,{client,id:String(s.id),code:game.code,no,name:s.name,score:0,correct:0,latency:0,answered:0,last:''});

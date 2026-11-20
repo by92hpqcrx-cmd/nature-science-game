@@ -207,7 +207,7 @@ $('activity').onchange=refreshActivities;
 $('classSelect').onchange=()=>{selected=[];renderPlayers()};
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 $('start').onclick=start;$('reveal').onclick=reveal;$('next').onclick=next;
-$('again').onclick=()=>{endClock();show('setup');selected=[];renderPlayers();};
+$('again').onclick=()=>{endClock();if(mode==='tablet')window.FunDeskKingTablet?.stop(false);show('setup');selected=[];renderPlayers();};
 $('quitGame').onclick=()=>{
  if(!round||!confirm('確定中斷這次挑戰？這一局不記錄任何成績或獎勵。'))return;
  endClock();round=null;submitted=false;

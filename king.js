@@ -214,6 +214,18 @@ $('quitGame').onclick=()=>{
  show('setup');$('feedback').textContent='';
 };
 
-$('fullBtn').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(e){alert('目前瀏覽器無法進入全螢幕')}}; 
+async function toggleKingFullscreen(){
+ try{
+  if(document.fullscreenElement){await document.exitFullscreen();return}
+  const isTablet=!$('tabletHost').classList.contains('hidden');
+  await (isTablet?$('tabletHost'):document.documentElement).requestFullscreen();
+ }catch(e){alert('目前瀏覽器無法進入全螢幕：'+(e?.message||e))}
+}
+$('fullBtn').onclick=toggleKingFullscreen;
+$('tabletFullBtn').onclick=toggleKingFullscreen;
+document.addEventListener('fullscreenchange',()=>{
+ const inside=document.fullscreenElement===$('tabletHost');
+ $('tabletFullBtn').textContent=inside?'↙ 退出全螢幕':'⛶ 全螢幕';
+}); 
 refreshUnits();setMode('practice');
 })();

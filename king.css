@@ -37,3 +37,14 @@ h1{margin:4px auto 5px;text-align:center;font-size:clamp(28px,5vw,43px);letter-s
 .tabletHostControls .small{padding:13px;background:#e2f6e8;color:#26593f;border:0;border-radius:12px;font-weight:900}
 #tabletHost{max-width:none}
 @media(max-width:620px){.modes{grid-template-columns:1fr}.tabletHostGrid{grid-template-columns:1fr}#tabletAnswers{grid-template-columns:1fr}.tabletRank{font-size:15px}}
+
+/* 平板競賽進行中，加入 QR Code 固定於競賽面板的右上角 */
+@media(min-width:621px){
+ .tabletHostGrid{grid-template-columns:minmax(0,1fr) 210px}
+ .tabletJoinCard{order:2;position:sticky;top:12px;z-index:3}
+ .tabletLiveBoard{order:1}
+}
+@media(max-width:620px){
+ .tabletJoinCard{order:0}
+ .tabletLiveBoard{order:1}
+}

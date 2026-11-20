@@ -39,8 +39,8 @@ async function connect(){
    return;
   }
   if(p.type==='top3'){$('studentTop3').textContent=(p.scores||[]).map((s,i)=>['🥇','🥈','🥉'][i]+s.no+'號 '+s.name+' '+s.score+'分').join('　')||'尚無得分';return}
-  if(p.type==='aborted'){show('done');$('doneMessage').textContent='老師已中斷競賽，本次不計成績';return}
-  if(p.type==='ended'){show('done');$('doneMessage').textContent='競賽完成！你本次得到 '+score+' 分';return}
+  if(p.type==='aborted'){phase='aborted';show('done');$('doneMessage').textContent='老師已中斷競賽，本次不計成績';return}
+  if(p.type==='ended'){phase='ended';show('done');$('doneMessage').textContent='競賽完成！你本次得到 '+score+' 分';return}
  });
  channel.subscribe(status=>{
   if(status==='SUBSCRIBED'){
@@ -93,12 +93,13 @@ $('joinForm').onsubmit=e=>{
  send({type:'join',no});
 };
 async function quit(){
- if(!confirm('確定退出競賽？你的本局成績不會列入競賽排名。'))return;
+ const completed=phase==='ended',aborted=phase==='aborted';
+ if(!completed&&!aborted&&!confirm('確定退出競賽？你的本局成績不會列入競賽排名。'))return;
  if(channel){
-  if(joined)await send({type:'leave'});
+  if(joined&&!completed&&!aborted)await send({type:'leave'});
   await session.removeChannel(channel).catch(()=>{});
  }
- channel=null;joined=false;show('done');$('doneMessage').textContent='已中斷退出，本局不列入成績。';
+ channel=null;joined=false;show('done');$('doneMessage').textContent=completed?'已關閉競賽連線；結算成績仍保留。':'已中斷退出，本局不列入成績。';
 }
 ['studentQuit','waitQuit','playQuit','doneQuit'].forEach(k=>$(k).onclick=quit);
 connect().catch(e=>message('連線失敗：'+e.message));

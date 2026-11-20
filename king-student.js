@@ -92,10 +92,13 @@ $('joinForm').onsubmit=e=>{
  currentNo=no;message('正在請老師端確認座號…');
  send({type:'join',no});
 };
-function quit(){
- if(!confirm('確定退出競賽？退出後仍可使用原 QR Code 重新加入。'))return;
- if(channel)session.removeChannel(channel).catch(()=>{});
- channel=null;joined=false;show('done');$('doneMessage').textContent='已離開競賽';
+async function quit(){
+ if(!confirm('確定退出競賽？你的本局成績不會列入競賽排名。'))return;
+ if(channel){
+  if(joined)await send({type:'leave'});
+  await session.removeChannel(channel).catch(()=>{});
+ }
+ channel=null;joined=false;show('done');$('doneMessage').textContent='已中斷退出，本局不列入成績。';
 }
 ['studentQuit','waitQuit','playQuit','doneQuit'].forEach(k=>$(k).onclick=quit);
 connect().catch(e=>message('連線失敗：'+e.message));

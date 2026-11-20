@@ -77,10 +77,14 @@ function renderQuestion(q){
  show('playing');setRemaining();
 }
 function setRemaining(){
- if($('playing').classList.contains('hidden'))return;
+ const scheduledId=questionId;
+ const refresh=()=>{
+ if(scheduledId!==questionId||$('playing').classList.contains('hidden'))return;
  $('studentRemaining').textContent='⏱ '+Math.max(0,Math.ceil((deadline-Date.now())/1000))+' 秒';
- if(Date.now()<deadline)setTimeout(setRemaining,250);
+ if(Date.now()<deadline)setTimeout(refresh,250);
  else [...$('studentOptions').children].forEach(b=>b.disabled=true);
+ };
+ refresh();
 }
 $('joinForm').onsubmit=e=>{
  e.preventDefault();const no=Number($('seatNumber').value);

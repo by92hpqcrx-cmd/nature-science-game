@@ -14,3 +14,26 @@ h1{margin:4px auto 5px;text-align:center;font-size:clamp(28px,5vw,43px);letter-s
 .contestants{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:15px}.contestant{border:2px solid #a1d2b1;background:#fff9e9;color:#244735;border-radius:14px;padding:11px;text-align:center}.contestant strong{display:block;font-size:17px}.contestant small{display:block;margin-bottom:7px}.answerBtns{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}.answerBtns button{padding:11px 0;font-weight:900;background:#d0ebdd;border:0;border-radius:8px;color:#24553d}.answerBtns button.chosen{background:#f8d16c}#game .small,#fullBtn{background:#e3f8ec;border:1px solid #7abfa0;border-radius:10px;color:#256448;font-weight:800;padding:9px 13px}
 #ranking{font-size:19px;max-width:540px;margin:15px auto}.rankLine{background:#ffffff1a;border:2px solid #ffffff44;border-radius:11px;padding:12px;margin:9px 0;display:flex;justify-content:space-between;gap:8px}#saveStatus{text-align:center;line-height:1.6;white-space:pre-wrap;color:#ffe6a5}#fireworks{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:200}#fireworks span{position:absolute;top:-5%;left:var(--x);width:11px;height:11px;background:var(--c);animation:fall var(--d) linear forwards}@keyframes fall{to{transform:translate(var(--dx),110vh) rotate(720deg);opacity:0}}
 @media(max-width:620px){.shell{padding:0 8px}.chalkboard{border-width:8px;padding:17px 11px 25px}.modes{grid-template-columns:1fr;gap:8px}.mode{min-height:71px;padding:9px;gap:2px}.settings{grid-template-columns:1fr 1fr}.options{grid-template-columns:1fr}.contestants{grid-template-columns:1fr 1fr}.contestant{padding:6px}.answerBtns{gap:2px}.answerBtns button{padding:8px 0}}
+/* 2026-11-21 四模式及平板教師競賽 */
+.modes{grid-template-columns:repeat(2,minmax(0,1fr))}
+.quitAction{background:#ffe4e6!important;border:2px solid #dc7281!important;color:#8b3241!important}
+.tabletHostGrid{display:grid;grid-template-columns:210px minmax(0,1fr);gap:15px;align-items:start;margin:16px 0}
+.tabletJoinCard{background:#fafff0;color:#295641;padding:13px;border:4px solid #c9dfa8;border-radius:16px;text-align:center}
+#tabletQR{background:white;border-radius:10px;padding:10px;display:flex;align-items:center;justify-content:center;min-height:175px}
+#tabletQR img,#tabletQR canvas{max-width:100%;height:auto}
+.tabletURL{font-size:10px;line-height:1.4;overflow-wrap:anywhere;margin-top:8px}
+.tabletLiveBoard{background:#104533;border:2px solid #7db697;border-radius:14px;padding:12px;min-height:190px}
+.tabletLiveBoard h2{font-size:22px;margin:0 0 10px;color:#ffe5a1}
+.tabletRank{display:flex;justify-content:space-between;gap:9px;border-bottom:1px solid #ffffff40;padding:7px 0;font-size:18px}
+#tabletRoster{font-size:12px;color:#c4f0d5;line-height:1.65}
+#tabletPlayerCount{font-weight:800;color:#f9dc95}
+.tabletQuestionPanel{background:#12442f;border-radius:17px;padding:15px;margin-top:12px}
+#tabletQuestion{font-size:clamp(23px,3.2vw,40px);text-align:center;line-height:1.4}
+#tabletAnswers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tabletAnswer{background:#fffdf3;color:#214a37;border-radius:12px;padding:13px;font-size:20px;font-weight:900}
+.tabletAnswer.right{background:#bcefc9}
+#tabletExplain{white-space:pre-wrap;color:#fff0b5;font-size:21px;font-weight:800}
+.tabletHostControls{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;padding:10px}
+.tabletHostControls .small{padding:13px;background:#e2f6e8;color:#26593f;border:0;border-radius:12px;font-weight:900}
+#tabletHost{max-width:none}
+@media(max-width:620px){.modes{grid-template-columns:1fr}.tabletHostGrid{grid-template-columns:1fr}#tabletAnswers{grid-template-columns:1fr}.tabletRank{font-size:15px}}

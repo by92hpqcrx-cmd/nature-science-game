@@ -13,11 +13,12 @@ function ranking(){
   window.opener.postMessage({kind:'fundesk-king-live',token:game.token,top3:a.slice(0,3).map(p=>({no:p.no,name:p.name,score:p.score}))},location.origin);
  }
 }
-const question=()=>phase==='running'?{id:game.questionId,index:game.index+1,total:game.questions.length,text:game.questions[game.index].question,options:game.questions[game.index].options,deadline:game.deadline}:null;
+const question=()=>phase==='running'&&!game.locked?{id:game.questionId,index:game.index+1,total:game.questions.length,text:game.questions[game.index].question,options:game.questions[game.index].options,deadline:game.deadline}:null;
 async function handle(p){
  if(!game||!p||phase==='aborted'||phase==='ended')return;
  const client=String(p.client||'');if(!/^[a-z0-9-]{16,100}$/i.test(client))return;
  if(p.type==='sync'){send({type:'state',to:client,phase,question:question(),label:game.label});return}
+ if(p.type==='leave'){if(members.delete(client)){ranking();$('tabletStatus').textContent='有學生退出，現有 '+members.size+' 位已加入';}return}
  if(p.type==='join'){
   const no=Number(p.no),s=game.students.find(x=>Number(x.no)===no);
   if(!s||!Number.isInteger(no)||[...members.values()].some(x=>x.no===no&&x.client!==client)){

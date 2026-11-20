@@ -200,7 +200,7 @@ function finish(){
 }
 window.addEventListener('message',event=>{
  if(event.source!==window.opener||event.origin!==connectedOrigin||event.data?.token!==token||event.data?.kind!=='fundesk-king-save-result')return;
- $('saveStatus').textContent=event.data.ok?'✅ 成績已儲存到 FunDesk 學生資料。'+(mode==='competition'?'\n🏆 第一名：科學王第一名 +2點':''):'⚠️ FunDesk 儲存失敗：'+String(event.data.error||'請回到主程式檢查');
+ $('saveStatus').textContent=event.data.ok?'✅ 成績已儲存到 FunDesk 學生資料。'+(mode==='competition'?'\n🏆 第一名 +2點':mode==='tablet'?'\n🏆 平板模式名次獎勵：+5／+3／+1點':''):'⚠️ FunDesk 儲存失敗：'+String(event.data.error||'請回到主程式檢查');
 });
 $('subject').onchange=refreshUnits;$('unit').onchange=refreshActivities;
 $('activity').onchange=refreshActivities;

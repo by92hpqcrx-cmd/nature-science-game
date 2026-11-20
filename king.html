@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>自然科學王｜FunDesk 四大模式</title>
-<link rel="stylesheet" href="./king.css?v=20261121-1"></head><body>
+<link rel="stylesheet" href="./king.css?v=20261121-full-1"></head><body>
 <div id="fireworks" aria-hidden="true"></div>
 <main class="shell">
 <header class="brand"><span class="brandIcon">🦖</span><div><strong>自然科學王</strong><small>FunDesk 四種科學挑戰模式</small></div><button type="button" id="fullBtn" class="small">⛶ 全螢幕</button></header>
@@ -35,7 +35,7 @@
 <div class="gameControls"><button id="quitGame" class="small quitAction" type="button">✕ 中斷退出（不計成績）</button><button id="reveal" class="small hidden">公布答案</button><button id="next" class="start hidden">下一題</button></div>
 </section>
 <section id="tabletHost" class="chalkboard hidden">
- <div class="gameTop"><strong>📱 平板即時競賽 <span id="tabletHostClass"></span></strong><button id="tabletAbort" type="button" class="small quitAction">✕ 中斷退出（不計成績）</button></div>
+ <div class="gameTop"><strong>📱 平板即時競賽 <span id="tabletHostClass"></span></strong><div class="gameControls"><button id="tabletFullBtn" type="button" class="small">⛶ 全螢幕</button><button id="tabletAbort" type="button" class="small quitAction">✕ 中斷退出（不計成績）</button></div></div>
  <p id="tabletStatus" aria-live="polite">正在建立教室…</p>
  <div class="tabletHostGrid">
   <section class="tabletJoinCard"><div id="tabletQR"></div><div class="tabletURL" id="tabletJoinURL"></div><small>學生掃描後輸入座號，等待老師開賽；開賽後仍可加入</small></section>
@@ -51,5 +51,5 @@
 <section id="finished" class="chalkboard hidden"><h1>🎉 挑戰完成！</h1><div id="ranking"></div><p id="saveStatus" aria-live="polite"></p><button id="again" class="start">🔄 回到模式選擇</button></section>
 </main>
 <script src="./supabase-config.js?v=20261121"></script><script src="./questions.js?v=20261119-u3-205"></script><script src="./math-questions.js?v=20261120"></script>
-<script src="./king.js?v=20261121-2"></script><script type="module" src="./king-tablet.js?v=20261121-3"></script><script src="./unit3-cloud.js?v=20261120"></script><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="./king.js?v=20261121-full-1"></script><script type="module" src="./king-tablet.js?v=20261121-3"></script><script src="./unit3-cloud.js?v=20261120"></script><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </body></html>

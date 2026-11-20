@@ -48,3 +48,50 @@ h1{margin:4px auto 5px;text-align:center;font-size:clamp(28px,5vw,43px);letter-s
  .tabletJoinCard{order:0}
  .tabletLiveBoard{order:1}
 }
+
+/* 平板競賽：教師端全螢幕真正鋪滿寬高，保留 QR、前三名與控制鈕 */
+body:fullscreen,body:has(#tabletHost:fullscreen){margin:0;overflow:hidden}
+#tabletHost:fullscreen{
+ box-sizing:border-box;width:100vw;max-width:none;min-width:0;height:100dvh;min-height:0;
+ margin:0;padding:clamp(9px,1.2vh,20px) clamp(12px,1.5vw,32px);
+ border-radius:0;display:flex!important;flex-direction:column;gap:clamp(4px,.8vh,12px);
+ overflow:hidden;background:#19513c;color:#fff;
+}
+#tabletHost:fullscreen .gameTop{flex:0 0 auto;font-size:clamp(17px,2.1vw,30px)}
+#tabletHost:fullscreen #tabletStatus{flex:0 0 auto;margin:0;font-size:clamp(12px,1.2vw,18px)}
+#tabletHost:fullscreen .tabletHostGrid{
+ display:grid;grid-template-columns:minmax(0,1fr) minmax(130px,15vw);
+ align-items:stretch;gap:clamp(8px,1vw,18px);height:auto;flex:0 0 clamp(105px,19vh,205px);
+ min-height:0;margin:0;overflow:hidden;
+}
+#tabletHost:fullscreen .tabletJoinCard{order:2;position:static;min-height:0;overflow:hidden;padding:clamp(5px,.8vw,10px);display:flex;flex-direction:column;align-items:center;gap:3px}
+#tabletHost:fullscreen #tabletQR{width:min(12vw,15vh,145px);height:min(12vw,15vh,145px);min-height:0;flex:0 0 auto;padding:5px}
+#tabletHost:fullscreen #tabletQR img,#tabletHost:fullscreen #tabletQR canvas{max-width:100%;max-height:100%;object-fit:contain}
+#tabletHost:fullscreen .tabletURL{display:none}
+#tabletHost:fullscreen .tabletJoinCard small{font-size:clamp(9px,.8vw,13px);line-height:1.2}
+#tabletHost:fullscreen .tabletLiveBoard{order:1;min-height:0;overflow:auto;padding:clamp(6px,1vh,13px)}
+#tabletHost:fullscreen .tabletLiveBoard h2{font-size:clamp(17px,2vw,27px);margin:0 0 3px}
+#tabletHost:fullscreen .tabletRank{font-size:clamp(14px,1.5vw,24px);padding:3px 0}
+#tabletHost:fullscreen #tabletPlayerCount{margin:4px 0}
+#tabletHost:fullscreen .tabletQuestionPanel{
+ flex:1 1 0;min-height:0;margin:0;padding:clamp(8px,1.3vw,20px);display:flex;flex-direction:column;gap:clamp(5px,.8vh,11px);
+ overflow:hidden;
+}
+#tabletHost:fullscreen #tabletQuestion{flex:0 1 auto;min-height:0;max-height:27%;overflow:auto;margin:0;font-size:clamp(24px,3.6vw,52px);line-height:1.22}
+#tabletHost:fullscreen #tabletAnswers{flex:1 1 0;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));gap:clamp(6px,1vw,14px)}
+#tabletHost:fullscreen .tabletAnswer{min-height:0;display:flex;align-items:center;font-size:clamp(18px,2.65vw,37px);line-height:1.25;padding:clamp(6px,1vw,18px);overflow:auto;overflow-wrap:anywhere}
+#tabletHost:fullscreen #tabletExplain{flex:0 0 auto;max-height:15%;overflow:auto;font-size:clamp(14px,1.5vw,23px);margin:0}
+#tabletHost:fullscreen .tabletHostControls{flex:0 0 auto;margin:0;padding:0;gap:clamp(5px,1vw,14px)}
+#tabletHost:fullscreen .tabletHostControls button{margin:0;font-size:clamp(15px,1.5vw,22px);padding:clamp(7px,1.1vh,14px)}
+@media(max-width:620px){
+ #tabletHost:fullscreen .tabletHostGrid{grid-template-columns:minmax(0,1fr) 110px}
+ #tabletHost:fullscreen #tabletAnswers{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #tabletHost:fullscreen #tabletQR{width:96px;height:96px}
+ #tabletHost:fullscreen .tabletJoinCard small{display:none}
+}
+@media(max-height:580px){
+ #tabletHost:fullscreen .tabletHostGrid{flex-basis:95px}
+ #tabletHost:fullscreen #tabletQR{width:80px;height:80px}
+ #tabletHost:fullscreen .tabletJoinCard small{display:none}
+ #tabletHost:fullscreen #tabletQuestion{max-height:20%}
+}

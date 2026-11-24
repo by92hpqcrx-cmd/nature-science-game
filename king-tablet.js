@@ -88,7 +88,7 @@ async function finish(){
  if(!window.opener){$('saveStatus').textContent='⚠️ 無教師連線，成績無法寫入';return}
  const players=a.map((p,i)=>({id:p.id,code:p.code,score:p.score,correct:p.correct,latency:Math.round(p.latency),place:i+1}));
  const winners=a.slice(0,3).map((p,i)=>({id:p.id,code:p.code,rank:i+1,delta:[5,3,1][i]}));
- window.opener.postMessage({kind:'fundesk-king-finish',token:game.token,gameId:game.id,mode:'tablet',subject:game.subject,questionCount:game.questions.length,players,winners,winner:null},location.origin);
+ window.opener.postMessage({kind:'fundesk-king-finish',token:game.token,gameId:game.id,mode:'tablet',subject:game.subject,questionCount:game.questions.length,activityCodes:[...new Set(game.questions.map(q=>String(q.unit)))],players,winners,winner:null},location.origin);
 }
 async function stop(abort){
  clearInterval(tick);tick=null;

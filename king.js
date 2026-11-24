@@ -195,7 +195,7 @@ function finish(){
  if(submitted)return;submitted=true;
  const participants=results.map((p,i)=>({id:p.id,code:p.code,score:p.score,correct:p.correct,place:i+1,latency:Math.round(p.latency)}));
  window.opener.postMessage({kind:'fundesk-king-finish',token,gameId:round.id,mode,subject:round.subject,
-  questionCount:round.questions.length,players:participants,
+  questionCount:round.questions.length,activityCodes:[...new Set(round.questions.map(q=>String(q.unit)))],players:participants,
   winner:mode==='competition'?{id:results[0].id,code:results[0].code,delta:2}:null},connectedOrigin);
 }
 window.addEventListener('message',event=>{

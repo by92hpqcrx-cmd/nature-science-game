@@ -12,7 +12,7 @@ const stamp=()=>new Date().toLocaleDateString('sv-SE',{timeZone:'Asia/Taipei'});
 const gameId=()=>crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2);
 const getUnits=()=> $('subject').value==='math'?mathUnits:units;
 const shuffle=ar=>{const a=[...ar];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
-function show(id){['setup','game','finished','tabletHost'].forEach(k=>$(k).classList.toggle('hidden',k!==id));}
+function show(id){['setup','game','finished','tabletHost','examHost'].forEach(k=>$(k).classList.toggle('hidden',k!==id));}
 function pool(){return questions.filter(q=>q.subject===$('subject').value&&($('unit').value==='all'||String(q.unit).startsWith($('unit').value))&&($('activity').value==='all'||q.unit===$('activity').value)&&Array.isArray(q.options)&&q.options.length>=2&&Number.isInteger(q.answer)&&q.answer>=0&&q.answer<q.options.length);}
 function refreshUnits(){
  const old=$('unit').value,values=$('subject').value==='math'?[['all','全部單元'],['9','第九單元・乘法'],['10','第十單元・平面圖形']]:[['all','全部單元'],['01','第一單元・動物世界'],['02','第二單元・探索聲光世界'],['03','第三單元・神祕的天空'],['04','第四單元・燃燒與生鏽']];
@@ -32,8 +32,8 @@ function renderPlayers(){
  const c=classList();
  const eligible=c?.students||[];
  selected=selected.filter(id=>eligible.some(s=>String(s.id)===String(id)));
- $('playerPick').classList.toggle('hidden',mode==='tablet');
- $('tabletClassHint').classList.toggle('hidden',mode!=='tablet');
+ $('playerPick').classList.toggle('hidden',['tablet','exam'].includes(mode));
+ $('tabletClassHint').classList.toggle('hidden',!['tablet','exam'].includes(mode));
  $('playerPick').replaceChildren();
  for(const s of eligible){
   const b=document.createElement('button');b.type='button';b.className='student'+(selected.includes(String(s.id))?' selected':'');
@@ -89,6 +89,8 @@ window.addEventListener('nature:cloud-questions',e=>{
  refreshActivities();
 });
 function start(){
+ if(mode==='exam'){if(!connected)return alert('請從已登入的 FunDesk 開啟');if(!window.FunDeskKingExam)return alert('測驗模組載入中');const qs=pool();if(!qs.length)return alert('沒有可用題目');const count=Math.min(Number($('count').value)||10,qs.length);const chosen=shuffle(qs).slice(0,count);const picked=prompt('本次試卷共 '+count+' 題。輸入 R 隨機組卷，或輸入題庫題號（逗號分隔）自選題目。\n'+qs.map((q,i)=>(i+1)+'. '+q.question).join('\n'),'R');if(picked===null)return;let paper=chosen;if(picked.trim().toUpperCase()!=='R'){const ids=picked.split(/[,，\s]+/).filter(Boolean).map(Number);if(!ids.length||ids.length>100||new Set(ids).size!==ids.length||ids.some(i=>!Number.isInteger(i)||i<1||i>qs.length))return alert('題號無效');paper=ids.map(i=>qs[i-1])}if(!confirm('確認試卷 '+paper.length+' 題？\n'+paper.map((q,i)=>(i+1)+'. '+q.question).join('\n')))return;window.FunDeskKingExam.start({classroom:classList(),questions:paper,subject:$('subject').value,token,show});return}
+
  if(mode==='tablet'){
   if(!connected){alert('平板模式請由已登入的 FunDesk 開啟。');return}
   if(!window.FunDeskKingTablet){alert('平板競賽模組仍在載入，請檢查網路後重試。');return}

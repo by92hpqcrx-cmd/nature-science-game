@@ -1,10 +1,10 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>自然科學王｜FunDesk 四大模式</title>
+<title>自然科學王｜FunDesk 五大模式</title>
 <link rel="stylesheet" href="./king.css?v=20261121-full-1"></head><body>
 <div id="fireworks" aria-hidden="true"></div>
 <main class="shell">
-<header class="brand"><span class="brandIcon">🦖</span><div><strong>自然科學王</strong><small>FunDesk 四種科學挑戰模式</small></div><button type="button" id="fullBtn" class="small">⛶ 全螢幕</button></header>
+<header class="brand"><span class="brandIcon">🦖</span><div><strong>自然科學王</strong><small>FunDesk 五種科學挑戰模式</small></div><button type="button" id="fullBtn" class="small">⛶ 全螢幕</button></header>
 <section id="setup" class="chalkboard">
 <div class="chalkCorner tl">⭐</div><div class="chalkCorner tr">🌟</div>
 <div class="chalkArt" aria-hidden="true">🐻 🐰 🦊 🐼</div>
@@ -15,7 +15,7 @@
 <button class="mode" data-mode="competition"><b>🏆 班級競賽</b><span>2～4 人競賽・第一名 +2 點</span></button>
 <button class="mode" data-mode="tablet"><b>📱 平板模式</b><span>掃描 QR Code 同時作答・前三名 +5／+3／+1 點</span></button>
 </div>
-<div id="connection" class="connection" aria-live="polite">個人練習可直接開始；計分與競賽請從已登入的 FunDesk 開啟。</div>
+<div class="modes"><button class="mode" data-mode="exam"><b>📝 個人試卷測驗</b><span>教師組卷・掃碼獨立作答・交卷計分</span></button></div><div id="connection" class="connection" aria-live="polite">個人練習可直接開始；計分與競賽請從已登入的 FunDesk 開啟。</div>
 <div id="rosterArea" class="roster hidden"><label>FunDesk 班級<select id="classSelect"></select></label><div id="playerPick" class="playerPick"></div><div id="tabletClassHint" class="hidden">📱 平板模式會開啟教室 QR Code，學生用平板掃碼加入。</div></div>
 <div class="settings">
 <label>科目<select id="subject"><option value="science">🌿 自然</option><option value="math">🔢 數學</option></select></label>
@@ -48,8 +48,8 @@
  </div>
  <div class="tabletHostControls"><button id="tabletStartNow" class="start" type="button">▶ 開始競賽</button><button id="tabletNext" class="small hidden" type="button">⏭️ 下一題（可隨時跳題）</button><button id="tabletFinish" class="small" type="button" disabled>🏁 結束競賽並結算</button></div>
  </section>
-<section id="finished" class="chalkboard hidden"><h1>🎉 挑戰完成！</h1><div id="ranking"></div><p id="saveStatus" aria-live="polite"></p><button id="again" class="start">🔄 回到模式選擇</button></section>
+<section id="examHost" class="chalkboard hidden"><h1 id="examTitle">個人試卷</h1><p id="examConnection"></p><p id="examStatus"></p><div id="examQR" style="background:white;padding:12px;width:max-content"></div><p id="examURL" style="overflow-wrap:anywhere"></p><p>請私下提供每位學生自己的通行碼，不要投影名單。</p><div class="gameControls"><button id="examOpen" class="start">開放作答</button><button id="examFinish" class="small">停止收卷並儲存</button><button id="examPins" class="small">顯示／隱藏名單與通行碼</button><button id="examExit" class="small">離開測驗</button></div><table id="examRosterTable" hidden style="width:100%;text-align:left"><thead><tr><th>座號</th><th>姓名</th><th>通行碼</th><th>狀態</th><th>百分制</th></tr></thead><tbody id="examRoster"></tbody></table></section><section id="finished" class="chalkboard hidden"><h1>🎉 挑戰完成！</h1><div id="ranking"></div><p id="saveStatus" aria-live="polite"></p><button id="again" class="start">🔄 回到模式選擇</button></section>
 </main>
 <script src="./supabase-config.js?v=20261121"></script><script src="./questions.js?v=20261119-u3-205"></script><script src="./math-questions.js?v=20261120"></script>
-<script src="./king.js?v=20261124-unit1"></script><script type="module" src="./king-tablet.js?v=20261124-unit1"></script><script src="./unit3-cloud.js?v=20261120"></script><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="./king.js?v=20261124-exam1"></script><script type="module" src="./king-tablet.js?v=20261124-unit1"></script><script type="module" src="./king-exam.js?v=20261124-exam1"></script><script src="./unit3-cloud.js?v=20261120"></script><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 </body></html>

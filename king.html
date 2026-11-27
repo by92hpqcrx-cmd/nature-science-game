@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>自然科學王｜FunDesk 五大模式</title>
-<link rel="stylesheet" href="./king.css?v=20261127-top5"></head><body>
+<link rel="stylesheet" href="./king.css?v=20261127-checkbank"><style>.king-bank-picker{max-width:620px;margin:12px auto;padding:12px;border:2px solid #9bd8b9;border-radius:14px;background:#164332}.king-bank-heading,.king-bank-unit summary{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.king-bank-heading strong{font-size:18px;color:#ffdfa1}.king-bank-hint{font-size:13px;margin:7px 0;color:#d9eee2}.king-bank-actions{display:flex;gap:6px;flex-wrap:wrap}.king-bank-actions button{padding:7px 11px;border:1px solid #9bd8b9;border-radius:9px;background:#e7f8ed;color:#20523d;font-weight:800}.king-bank-actions button:last-child{background:#ffe6e6;color:#963b3b;border-color:#e3aaa9}.king-bank-unit{margin:8px 0;border-radius:10px;background:#f5fbef;color:#23493d;overflow:hidden}.king-bank-unit summary{padding:12px;cursor:pointer;list-style:none}.king-bank-unit summary strong:before{content:"▸ ";color:#427d5a}.king-bank-unit[open] summary strong:before{content:"▾ "}.king-bank-unit summary span{font-size:12px;color:#42684f}.king-bank-unit>.king-bank-actions{padding:0 10px 8px}.king-bank-activity{display:flex;flex-direction:row;align-items:center;gap:8px;padding:10px;border-top:1px solid #d6e8d4;color:#23493d;font-size:15px;cursor:pointer}.king-bank-activity:has(input:checked){background:#e2f3e5}.king-bank-activity input{width:20px;height:20px;flex:none;accent-color:#36754e}.king-bank-activity span{flex:1}.king-bank-activity small{white-space:nowrap;color:#42684f}</style></head><body>
 <div id="fireworks" aria-hidden="true"></div>
 <main class="shell">
 <header class="brand"><span class="brandIcon">🦖</span><div><strong>自然科學王</strong><small>FunDesk 五種科學挑戰模式</small></div><button type="button" id="fullBtn" class="small">⛶ 全螢幕</button></header>
@@ -19,12 +19,11 @@
 <div id="rosterArea" class="roster hidden"><label>FunDesk 班級<select id="classSelect"></select></label><div id="playerPick" class="playerPick"></div><div id="tabletClassHint" class="hidden">📱 平板模式會開啟教室 QR Code，學生用平板掃碼加入。</div></div>
 <div class="settings">
 <label>科目<select id="subject"><option value="science">🌿 自然</option><option value="math">🔢 數學</option></select></label>
-<label>單元<select id="unit"></select></label>
-<label>活動一<select id="activity"></select></label><label>活動二（選填）<select id="activity2"><option value="">不選第二個活動</option></select></label>
+
 <label>題型<select id="questionType"><option value="all">全部題型</option><option value="2">是非題</option><option value="4">選擇題</option></select></label><label>題數<select id="count"><option value="5">5 題</option><option value="10" selected>10 題</option><option value="15">15 題</option><option value="20">20 題</option></select></label>
 <label>競賽每題時間<select id="duration"><option value="15">15 秒</option><option value="20" selected>20 秒</option><option value="30">30 秒</option><option value="45">45 秒</option></select></label>
 </div>
-<p id="poolInfo" class="subnote"></p><p id="cloudInfo" class="subnote" aria-live="polite">正在讀取線上題庫…</p><button type="button" class="small" id="reloadCloud">↻ 重新整理線上題庫</button>
+<section class="king-bank-picker" aria-label="選擇題庫"><div class="king-bank-heading"><strong>📚 題庫活動（可複選）</strong><div class="king-bank-actions"><button type="button" id="bankSelectAll">全選活動</button><button type="button" id="bankClearAll">取消全部選取</button></div></div><p class="king-bank-hint">點選單元展開活動，可跨單元勾選。</p><div id="activityGroups"></div></section><p id="poolInfo" class="subnote" aria-live="polite"></p><p id="cloudInfo" class="subnote" aria-live="polite">正在讀取線上題庫…</p><button type="button" class="small" id="reloadCloud">↻ 重新整理線上題庫</button>
 <button id="start" class="start">🚀 開始挑戰</button>
 </section>
 <section id="game" class="chalkboard hidden">
@@ -51,5 +50,5 @@
 <section id="examHost" class="chalkboard hidden"><h1 id="examTitle">個人試卷</h1><p id="examConnection"></p><p id="examStatus"></p><div id="examQR" style="background:white;padding:12px;width:max-content"></div><p id="examURL" style="overflow-wrap:anywhere"></p><p>學生掃碼後輸入自己的座號即可加入；請巡視核對試卷上方的姓名與座號。</p><div class="gameControls"><button id="examOpen" class="start">開放作答</button><button id="examFinish" class="small">停止收卷並儲存</button><button id="examPins" class="small">顯示／隱藏學生名單</button><button id="examExit" class="small">離開測驗</button></div><table id="examRosterTable" style="width:100%;text-align:left"><thead><tr><th>座號</th><th>姓名</th><th>狀態</th><th>百分制</th><th>操作</th></tr></thead><tbody id="examRoster"></tbody></table></section><section id="finished" class="chalkboard hidden"><h1>🎉 挑戰完成！</h1><div id="ranking"></div><p id="saveStatus" aria-live="polite"></p><button id="again" class="start">🔄 回到模式選擇</button></section>
 </main>
 <script src="./supabase-config.js?v=20261121"></script><script src="./questions.js?v=20261119-u3-205"></script><script src="./math-questions.js?v=20261120"></script>
-<script src="./king.js?v=20261127-bank4"></script><script type="module" src="./king-tablet.js?v=20261127-rejoin5"></script><script type="module" src="./king-exam.js?v=20261126-mainqr7"></script><script src="./unit3-cloud.js?v=20261127-bank4"></script><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="./king.js?v=20261127-checkbank"></script><script type="module" src="./king-tablet.js?v=20261127-rejoin5"></script><script type="module" src="./king-exam.js?v=20261126-mainqr7"></script><script src="./unit3-cloud.js?v=20261127-bank4"></script><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script>document.getElementById("tabletManage").onclick=()=>document.getElementById("tabletManageDialog").showModal();document.getElementById("tabletManageClose").onclick=()=>document.getElementById("tabletManageDialog").close();</script></body></html>

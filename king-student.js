@@ -2,7 +2,7 @@ import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+e
 const $=id=>document.getElementById(id),room=new URL(location.href).searchParams.get('room')||'';
 const cfg=window.NATURE_SUPABASE||{};
 const id=(()=>{const key='nature-king-client:'+room;let value=sessionStorage.getItem(key);if(!value){value=crypto.randomUUID();sessionStorage.setItem(key,value)}return value})();
-let channel,session,joined=false,score=0,questionId='',answered=false,currentNo=0,deadline=0,phase='lobby';
+let channel,session,joined=false,score=0,questionId='',answered=false,currentNo=0,deadline=0,phase='lobby',leaving=false,leaveTimer=null;
 const show=name=>['join','waiting','playing','done'].forEach(s=>$(s).classList.toggle('hidden',s!==name));
 const send=async data=>{if(!channel)return;try{await channel.send({type:'broadcast',event:'student',payload:{...data,client:id}})}catch(e){console.warn(e)}};
 const message=x=>{$('joinStatus').textContent=x};
@@ -13,12 +13,13 @@ async function connect(){
  channel.on('broadcast',{event:'teacher'},({payload:p})=>{
   if(!p)return;
   if(p.to&&p.to!==id)return;
-  if(p.type==='admitted'){
-   if(!p.ok){message('⚠️ '+(p.error||'加入失敗'));return}
-   joined=true;score=p.score||score;currentNo=p.no;
+  if(['left','kicked','rejoin'].includes(p.type)){clearTimeout(leaveTimer);joined=false;leaving=false;currentNo=0;questionId='';answered=false;score=0;phase='lobby';show('join');$('joinButton').disabled=false;message(p.type==='kicked'?'老師已移除你，可重新輸入座號加入':p.type==='left'?'已退出競賽，可重新加入':'連線已逾時，請重新加入');return}
+  if(p.type==='admitted'){if(leaving)return;
+   if(!p.ok){joined=false;currentNo=0;show('join');message('⚠️ '+(p.error||'加入失敗')+'，可請老師移除舊連線後重試');return}
+   joined=true;score=Number(p.score)||0;currentNo=p.no;
    $('studentName').textContent=p.no+' 號 '+p.name;$('mySeat').textContent='👩‍🎓 '+p.no+' 號 '+p.name;
    $('myCurrentScore').textContent='目前 '+score+' 分';
-   if(p.question)renderQuestion(p.question);else{show('waiting');$('waitMessage').textContent=p.phase==='lobby'?'等待老師開始…':'等待下一題…'}
+   if(p.question){renderQuestion(p.question);if(p.answered){answered=true;$('endAnswer').disabled=true;[...$('studentOptions').children].forEach(b=>b.disabled=true);$('studentFeedback').textContent='本題已作答，等待下一題'}}else{show('waiting');$('waitMessage').textContent=p.phase==='lobby'?'等待老師開始…':'等待下一題…'}
    return;
   }
   if(p.type==='state'){
@@ -106,10 +107,12 @@ async function quit(){
  const completed=phase==='ended',aborted=phase==='aborted';
  if(!completed&&!aborted&&!confirm('確定退出競賽？你的本局成績不會列入競賽排名。'))return;
  if(channel){
-  if(joined&&!completed&&!aborted)await send({type:'leave'});
+  if(!completed&&!aborted){leaving=true;joined=false;currentNo=0;show('join');$('joinButton').disabled=true;message('正在退出競賽…');await send({type:'leave'});if(leaving)leaveTimer=setTimeout(()=>{if(!leaving)return;leaving=false;questionId='';answered=false;score=0;phase='lobby';$('joinButton').disabled=false;message('退出確認逾時，可重新加入；若座號仍鎖定請老師移除')},3500);return}
   await session.removeChannel(channel).catch(()=>{});
  }
  channel=null;joined=false;show('done');$('doneMessage').textContent=completed?'已關閉競賽連線；結算成績仍保留。':'已中斷退出，本局不列入成績。';
 }
 ['studentQuit','waitQuit','playQuit','doneQuit'].forEach(k=>$(k).onclick=quit);
+setInterval(()=>{if(joined&&!leaving&&['lobby','running'].includes(phase))send({type:'heartbeat'})},5000);
+window.addEventListener('pagehide',e=>{if(!e.persisted&&joined&&!leaving&&['lobby','running'].includes(phase))send({type:'leave'})});
 connect().catch(e=>message('連線失敗：'+e.message));

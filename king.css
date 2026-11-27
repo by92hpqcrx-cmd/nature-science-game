@@ -95,3 +95,27 @@ body:fullscreen,body:has(#tabletHost:fullscreen){margin:0;overflow:hidden}
  #tabletHost:fullscreen .tabletJoinCard small{display:none}
  #tabletHost:fullscreen #tabletQuestion{max-height:20%}
 }
+
+/* 2026-11-27 平板競賽：兩層資訊與五名頭像 */
+.tabletLiveBoard{min-height:0;text-align:left}
+.tabletInfoLine{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+#tabletPlayerCount{margin:0;font-size:clamp(14px,1.7vw,25px)}
+#tabletManage{background:#fff0bf;color:#34543b;border:0;padding:6px 12px;border-radius:9px;font-weight:800;cursor:pointer}
+#tabletTop3{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.tabletRank{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-width:0;text-align:center;border:1px solid #a8d4b577;border-radius:9px;background:#ffffff10;padding:5px;font-size:clamp(11px,1.3vw,20px)}
+.tabletRank strong{overflow-wrap:anywhere;line-height:1.2}
+.rankAvatar{display:block;width:clamp(25px,4vw,58px);height:clamp(25px,4vw,58px);object-fit:contain;border-radius:50%;background:#fff9e8;color:#274b38;font-size:24px}
+.rankMedal{font-weight:900;color:#ffe9a2}
+.rankEmpty{color:#a4c5af}
+#tabletManageDialog{width:min(90vw,560px);max-height:85dvh;border:2px solid #84b9a0;border-radius:16px;background:#f7fff9;color:#244b38;padding:18px;text-align:left;overflow:auto}
+#tabletManageDialog::backdrop{background:#001a12aa}
+#tabletManageDialog h2{color:#244b38}
+#tabletRoster{max-height:55dvh;overflow:auto;color:#244b38;font-size:17px}
+.tabletMember{display:flex;align-items:center;justify-content:space-between;padding:7px;border-bottom:1px solid #d2e7d7}
+.tabletMember button{background:#ffe2e2;color:#a52c2c;border:1px solid #e5b1b1;border-radius:8px;padding:6px 12px;cursor:pointer}
+#tabletManageClose{margin-top:12px;padding:8px 15px;border-radius:8px;background:#d8efde;border:0;color:#244b38;cursor:pointer}
+#tabletHost:fullscreen .tabletLiveBoard{overflow:visible}
+#tabletHost:fullscreen .tabletHostGrid{flex-basis:clamp(140px,23vh,235px)}
+#tabletHost:fullscreen .tabletRank{font-size:clamp(12px,1.35vw,21px);padding:3px}
+#tabletHost:fullscreen .rankAvatar{width:clamp(24px,5vh,52px);height:clamp(24px,5vh,52px)}
+@media(max-height:550px){#tabletHost:fullscreen .tabletHostGrid{flex-basis:115px}#tabletHost:fullscreen .rankAvatar{width:23px;height:23px}#tabletHost:fullscreen .tabletRank{gap:1px;font-size:11px}#tabletHost:fullscreen .tabletInfoLine{margin-bottom:2px}}

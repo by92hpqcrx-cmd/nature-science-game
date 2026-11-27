@@ -3,7 +3,8 @@
 const $=id=>document.getElementById(id);
 const units={'01-01':'動物如何求生存','01-02':'動物具有社會行為嗎','01-03':'動物如何延續生命','02-01':'樂音與噪音有什麼不同','02-02':'樂器如何發出不同的聲音','02-03':'光有什麼特性與現象','03-01':'太陽的位置和四季有關嗎','03-02':'太陽系有哪些成員','03-03':'四季的星空有什麼不一樣','04-01':'空氣與燃燒有什麼關係','04-02':'燃燒的條件與如何滅火','04-03':'為何會生鏽與如何防鏽'};
 const mathUnits={'9-01':'3的乘法','9-02':'6的乘法','9-03':'7的乘法','9-04':'9的乘法','9-05':'乘法的應用','10-01':'平面圖形的邊、角和頂點','10-02':'正三角形、正方形和長方形','10-03':'認識周界、內部和外部','10-04':'認識周長'};
-let questions=[...(window.NATURE_QUESTIONS||[]).map(q=>({...q,subject:'science'})),...(window.NATURE_MATH_QUESTIONS||[]).map(q=>({...q,subject:'math'}))];
+const baseQuestions=[...(window.NATURE_QUESTIONS||[]).map(q=>({...q,subject:'science'})),...(window.NATURE_MATH_QUESTIONS||[]).map(q=>({...q,subject:'math'}))];
+let questions=[...baseQuestions];
 const token=new URL(location.href).searchParams.get('fundeskToken')||'';
 const connectedOrigin=location.origin;
 let classes=[],mode='practice',selected=[],round=null,clock=null,connected=false,submitted=false;
@@ -14,7 +15,7 @@ const getUnits=()=> $('subject').value==='math'?mathUnits:units;
 const shuffle=ar=>{const a=[...ar];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 function show(id){['setup','game','finished','tabletHost','examHost'].forEach(k=>$(k).classList.toggle('hidden',k!==id));}
 function activitySelection(){const a=$('activity').value,b=$('activity2')?.value||'';return a==='all'?[]:[...new Set([a,b].filter(Boolean))]}
-function pool(){const activities=activitySelection();return questions.filter(q=>q.subject===$('subject').value&&($('unit').value==='all'||String(q.unit).startsWith($('unit').value))&&(!activities.length||activities.includes(String(q.unit)))&&Array.isArray(q.options)&&q.options.length>=2&&Number.isInteger(q.answer)&&q.answer>=0&&q.answer<q.options.length);}
+function pool(){const activities=activitySelection();return questions.filter(q=>q.subject===$('subject').value&&($('unit').value==='all'||String(q.unit).startsWith($('unit').value))&&(!activities.length||activities.includes(String(q.unit)))&&Array.isArray(q.options)&&[2,4].includes(q.options.length)&&(!$('questionType')||$('questionType').value==='all'||q.options.length===Number($('questionType').value))&&Number.isInteger(q.answer)&&q.answer>=0&&q.answer<q.options.length);}
 function refreshUnits(){
  const old=$('unit').value,values=$('subject').value==='math'?[['all','全部單元'],['9','第九單元・乘法'],['10','第十單元・平面圖形']]:[['all','全部單元'],['01','第一單元・動物世界'],['02','第二單元・探索聲光世界'],['03','第三單元・神祕的天空'],['04','第四單元・燃燒與生鏽']];
  $('unit').replaceChildren(...values.map(([value,label])=>new Option(label,value)));
@@ -23,7 +24,7 @@ function refreshUnits(){
 }
 function refreshActivities(){
  const old=$('activity').value,old2=$('activity2')?.value||'';
- const values=[['all','全部活動'],...Object.entries(getUnits()).filter(([key])=>$('unit').value==='all'||key.startsWith($('unit').value)).map(([key,value])=>[key,key+' '+value])];
+ const values=[['all','全部活動'],...Object.entries(getUnits()).filter(([key])=>$('unit').value==='all'||key.startsWith($('unit').value)).map(([key,value])=>[key,key+' '+value+'（'+questions.filter(q=>q.subject===$('subject').value&&String(q.unit)===key&&($('questionType').value==='all'||q.options.length===Number($('questionType').value))).length+' 題）'])];
  $('activity').replaceChildren(...values.map(([value,label])=>new Option(label,value)));
  $('activity').value=values.some(x=>x[0]===old)?old:'all';
  const second=$('activity2');if(second){const others=values.filter(([v])=>v!=='all'&&v!==$('activity').value);second.replaceChildren(new Option('不選第二個活動',''),...others.map(([v,l])=>new Option(l,v)));second.disabled=$('activity').value==='all'||!others.length;second.value=!second.disabled&&others.some(([v])=>v===old2)?old2:'';}
@@ -88,8 +89,7 @@ if(token&&window.opener){
  const handshake=setInterval(ready,700);ready();
 }
 window.addEventListener('nature:cloud-questions',e=>{
- const ids=new Set(questions.map(q=>String(q.id)));
- for(const q of e.detail||[])if(!ids.has(String(q.id))){questions.push({...q,subject:'science'});ids.add(String(q.id));}
+ questions=[...baseQuestions,...(e.detail||[]).map(q=>({...q,subject:'science'}))];
  refreshActivities();
 });
 function start(){
@@ -209,6 +209,9 @@ window.addEventListener('message',event=>{
  $('saveStatus').textContent=event.data.ok?'✅ 成績已儲存到 FunDesk 學生資料。'+(mode==='competition'?'\n🏆 第一名 +2點':mode==='tablet'?'\n🏆 平板模式名次獎勵：+5／+3／+1點':''):'⚠️ FunDesk 儲存失敗：'+String(event.data.error||'請回到主程式檢查');
 });
 $('subject').onchange=refreshUnits;$('unit').onchange=refreshActivities;
+$('questionType').onchange=refreshActivities;
+$('reloadCloud').onclick=()=>{if(!window.reloadNatureCloud)return;$('cloudInfo').textContent='正在更新線上題庫…';window.reloadNatureCloud()};
+window.addEventListener('nature:cloud-status',e=>{$('cloudInfo').textContent='線上補充 '+e.detail.added+' 題'+(e.detail.error?'｜部分讀取失敗：'+e.detail.error:'｜已更新')});
 $('activity').onchange=refreshActivities;if($('activity2'))$('activity2').onchange=refreshActivities;
 $('classSelect').onchange=()=>{selected=[];renderPlayers()};
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));

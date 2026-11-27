@@ -14,23 +14,32 @@ const gameId=()=>crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.rando
 const getUnits=()=> $('subject').value==='math'?mathUnits:units;
 const shuffle=ar=>{const a=[...ar];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 function show(id){['setup','game','finished','tabletHost','examHost'].forEach(k=>$(k).classList.toggle('hidden',k!==id));}
-function activitySelection(){const a=$('activity').value,b=$('activity2')?.value||'';return a==='all'?[]:[...new Set([a,b].filter(Boolean))]}
-function pool(){const activities=activitySelection();return questions.filter(q=>q.subject===$('subject').value&&($('unit').value==='all'||String(q.unit).startsWith($('unit').value))&&(!activities.length||activities.includes(String(q.unit)))&&Array.isArray(q.options)&&[2,4].includes(q.options.length)&&(!$('questionType')||$('questionType').value==='all'||q.options.length===Number($('questionType').value))&&Number.isInteger(q.answer)&&q.answer>=0&&q.answer<q.options.length);}
-function refreshUnits(){
- const old=$('unit').value,values=$('subject').value==='math'?[['all','全部單元'],['9','第九單元・乘法'],['10','第十單元・平面圖形']]:[['all','全部單元'],['01','第一單元・動物世界'],['02','第二單元・探索聲光世界'],['03','第三單元・神祕的天空'],['04','第四單元・燃燒與生鏽']];
- $('unit').replaceChildren(...values.map(([value,label])=>new Option(label,value)));
- $('unit').value=values.some(x=>x[0]===old)?old:'all';
- refreshActivities();
-}
+const activityPicks={science:new Set(Object.keys(units)),math:new Set(Object.keys(mathUnits))};
+const expandedUnits={science:new Set(),math:new Set()};
+const unitTitles={'01':'第一單元・動物世界','02':'第二單元・探索聲光世界','03':'第三單元・神祕的天空','04':'第四單元・燃燒與生鏽','9':'第九單元・乘法','10':'第十單元・平面圖形'};
+const currentPicks=()=>activityPicks[$('subject').value];
+function activitySelection(){return [...currentPicks()]}
+function eligible(q){return q.subject===$('subject').value&&Array.isArray(q.options)&&[2,4].includes(q.options.length)&&($('questionType').value==='all'||q.options.length===Number($('questionType').value))&&Number.isInteger(q.answer)&&q.answer>=0&&q.answer<q.options.length}
+function pool(){return questions.filter(q=>eligible(q)&&currentPicks().has(String(q.unit)))}
+function refreshUnits(){refreshActivities()}
 function refreshActivities(){
- const old=$('activity').value,old2=$('activity2')?.value||'';
- const values=[['all','全部活動'],...Object.entries(getUnits()).filter(([key])=>$('unit').value==='all'||key.startsWith($('unit').value)).map(([key,value])=>[key,key+' '+value+'（'+questions.filter(q=>q.subject===$('subject').value&&String(q.unit)===key&&($('questionType').value==='all'||q.options.length===Number($('questionType').value))).length+' 題）'])];
- $('activity').replaceChildren(...values.map(([value,label])=>new Option(label,value)));
- $('activity').value=values.some(x=>x[0]===old)?old:'all';
- const second=$('activity2');if(second){const others=values.filter(([v])=>v!=='all'&&v!==$('activity').value);second.replaceChildren(new Option('不選第二個活動',''),...others.map(([v,l])=>new Option(l,v)));second.disabled=$('activity').value==='all'||!others.length;second.value=!second.disabled&&others.some(([v])=>v===old2)?old2:'';}
- const chosen=activitySelection();$('poolInfo').textContent='可用題庫：'+pool().length+' 題'+(chosen.length===2?'（兩個活動混合抽題）':'');
+ const subject=$('subject').value,picks=currentPicks(),open=expandedUnits[subject],groups=new Map(),counts=new Map();
+ for(const q of questions)if(eligible(q))counts.set(String(q.unit),(counts.get(String(q.unit))||0)+1);
+ for(const [key,name] of Object.entries(getUnits())){const unit=key.split('-')[0];if(!groups.has(unit))groups.set(unit,[]);groups.get(unit).push([key,name])}
+ const root=$('activityGroups');root.replaceChildren();
+ for(const [unit,items] of groups){
+  const details=document.createElement('details');details.className='king-bank-unit';details.open=open.has(unit);
+  details.ontoggle=()=>{if(details.open)open.add(unit);else open.delete(unit)};
+  const summary=document.createElement('summary');const selectedCount=items.filter(([key])=>picks.has(key)).length;
+  summary.innerHTML='<strong>'+safe(unitTitles[unit]||unit)+'</strong><span>'+selectedCount+'/'+items.length+' 活動 · '+items.reduce((n,[key])=>n+(picks.has(key)?counts.get(key)||0:0),0)+' 題</span>';details.append(summary);
+  const actions=document.createElement('div');actions.className='king-bank-actions';
+  for(const [label,checked] of [['全選本單元',true],['取消本單元',false]]){const btn=document.createElement('button');btn.type='button';btn.textContent=label;btn.onclick=()=>{open.add(unit);for(const [key] of items)checked?picks.add(key):picks.delete(key);refreshActivities()};actions.append(btn)}details.append(actions);
+  for(const [key,name] of items){const label=document.createElement('label');label.className='king-bank-activity';const input=document.createElement('input');input.type='checkbox';input.checked=picks.has(key);input.onchange=()=>{open.add(unit);input.checked?picks.add(key):picks.delete(key);refreshActivities()};const title=document.createElement('span');title.textContent='活動 '+Number(key.split('-')[1])+'　'+name;const count=document.createElement('small');count.textContent=(counts.get(key)||0)+' 題';label.append(input,title,count);details.append(label)}
+  root.append(details);
+ }
+ $('poolInfo').textContent='已選 '+picks.size+' 個活動，共 '+pool().length+' 題'+(picks.size>1?'（混合抽題）':'');
 }
-function drawQuestions(qs,count){const selectedActivities=activitySelection();if(selectedActivities.length!==2)return shuffle(qs).slice(0,count);const groups=selectedActivities.map(code=>shuffle(qs.filter(q=>String(q.unit)===code)));const chosen=[];let next=Math.random()<.5?0:1;while(chosen.length<count&&(groups[0].length||groups[1].length)){if(groups[next].length)chosen.push(groups[next].pop());else if(groups[1-next].length)chosen.push(groups[1-next].pop());next=1-next}return shuffle(chosen)}
+function drawQuestions(qs,count){const groups=shuffle(activitySelection()).map(code=>shuffle(qs.filter(q=>String(q.unit)===code))).filter(g=>g.length);const chosen=[];while(chosen.length<count&&groups.some(g=>g.length)){for(const g of groups){if(g.length&&chosen.length<count)chosen.push(g.pop())}}return shuffle(chosen)}
 
 function classList(){return classes.find(c=>c.code===$('classSelect').value);}
 function renderPlayers(){
@@ -93,6 +102,7 @@ window.addEventListener('nature:cloud-questions',e=>{
  refreshActivities();
 });
 function start(){
+ if(!pool().length)return alert('請先勾選有可用題目的活動');
  if(mode==='exam'){if(!connected)return alert('請從已登入的 FunDesk 開啟');if(!window.FunDeskKingExam)return alert('測驗模組載入中');const qs=pool();if(!qs.length)return alert('沒有可用題目');const count=Math.min(Number($('count').value)||10,qs.length);const chosen=drawQuestions(qs,count);const picked=prompt('本次試卷共 '+count+' 題。輸入 R 隨機組卷，或輸入題庫題號（逗號分隔）自選題目。\n'+qs.map((q,i)=>(i+1)+'. '+q.question).join('\n'),'R');if(picked===null)return;let paper=chosen;if(picked.trim().toUpperCase()!=='R'){const ids=picked.split(/[,，\s]+/).filter(Boolean).map(Number);if(!ids.length||ids.length>100||new Set(ids).size!==ids.length||ids.some(i=>!Number.isInteger(i)||i<1||i>qs.length))return alert('題號無效');paper=ids.map(i=>qs[i-1])}if(!confirm('確認試卷 '+paper.length+' 題？\n'+paper.map((q,i)=>(i+1)+'. '+q.question).join('\n')))return;window.FunDeskKingExam.start({classroom:classList(),questions:paper,subject:$('subject').value,token,show});return}
 
  if(mode==='tablet'){
@@ -208,11 +218,13 @@ window.addEventListener('message',event=>{
  if(event.source!==window.opener||event.origin!==connectedOrigin||event.data?.token!==token||event.data?.kind!=='fundesk-king-save-result')return;
  $('saveStatus').textContent=event.data.ok?'✅ 成績已儲存到 FunDesk 學生資料。'+(mode==='competition'?'\n🏆 第一名 +2點':mode==='tablet'?'\n🏆 平板模式名次獎勵：+5／+3／+1點':''):'⚠️ FunDesk 儲存失敗：'+String(event.data.error||'請回到主程式檢查');
 });
-$('subject').onchange=refreshUnits;$('unit').onchange=refreshActivities;
+$('subject').onchange=refreshUnits;
+$('bankSelectAll').onclick=()=>{for(const key of Object.keys(getUnits()))currentPicks().add(key);refreshActivities()};
+$('bankClearAll').onclick=()=>{currentPicks().clear();refreshActivities()};
 $('questionType').onchange=refreshActivities;
 $('reloadCloud').onclick=()=>{if(!window.reloadNatureCloud)return;$('cloudInfo').textContent='正在更新線上題庫…';window.reloadNatureCloud()};
 window.addEventListener('nature:cloud-status',e=>{$('cloudInfo').textContent='線上補充 '+e.detail.added+' 題'+(e.detail.error?'｜部分讀取失敗：'+e.detail.error:'｜已更新')});
-$('activity').onchange=refreshActivities;if($('activity2'))$('activity2').onchange=refreshActivities;
+
 $('classSelect').onchange=()=>{selected=[];renderPlayers()};
 document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 $('start').onclick=start;$('reveal').onclick=reveal;$('next').onclick=next;

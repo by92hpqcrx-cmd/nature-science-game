@@ -20,7 +20,7 @@
 <div class="settings">
 <label>科目<select id="subject"><option value="science">🌿 自然</option><option value="math">🔢 數學</option></select></label>
 <label>單元<select id="unit"></select></label>
-<label>活動<select id="activity"></select></label>
+<label>活動一<select id="activity"></select></label><label>活動二（選填）<select id="activity2"><option value="">不選第二個活動</option></select></label>
 <label>題數<select id="count"><option value="5">5 題</option><option value="10" selected>10 題</option><option value="15">15 題</option><option value="20">20 題</option></select></label>
 <label>競賽每題時間<select id="duration"><option value="15">15 秒</option><option value="20" selected>20 秒</option><option value="30">30 秒</option><option value="45">45 秒</option></select></label>
 </div>
@@ -51,5 +51,5 @@
 <section id="examHost" class="chalkboard hidden"><h1 id="examTitle">個人試卷</h1><p id="examConnection"></p><p id="examStatus"></p><div id="examQR" style="background:white;padding:12px;width:max-content"></div><p id="examURL" style="overflow-wrap:anywhere"></p><p>學生掃碼後輸入自己的座號即可加入；請巡視核對試卷上方的姓名與座號。</p><div class="gameControls"><button id="examOpen" class="start">開放作答</button><button id="examFinish" class="small">停止收卷並儲存</button><button id="examPins" class="small">顯示／隱藏學生名單</button><button id="examExit" class="small">離開測驗</button></div><table id="examRosterTable" style="width:100%;text-align:left"><thead><tr><th>座號</th><th>姓名</th><th>狀態</th><th>百分制</th><th>操作</th></tr></thead><tbody id="examRoster"></tbody></table></section><section id="finished" class="chalkboard hidden"><h1>🎉 挑戰完成！</h1><div id="ranking"></div><p id="saveStatus" aria-live="polite"></p><button id="again" class="start">🔄 回到模式選擇</button></section>
 </main>
 <script src="./supabase-config.js?v=20261121"></script><script src="./questions.js?v=20261119-u3-205"></script><script src="./math-questions.js?v=20261120"></script>
-<script src="./king.js?v=20261124-exam1"></script><script type="module" src="./king-tablet.js?v=20261127-rejoin5"></script><script type="module" src="./king-exam.js?v=20261126-mainqr7"></script><script src="./unit3-cloud.js?v=20261120"></script><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script src="./king.js?v=20261127-two-activities"></script><script type="module" src="./king-tablet.js?v=20261127-rejoin5"></script><script type="module" src="./king-exam.js?v=20261126-mainqr7"></script><script src="./unit3-cloud.js?v=20261120"></script><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
 <script>document.getElementById("tabletManage").onclick=()=>document.getElementById("tabletManageDialog").showModal();document.getElementById("tabletManageClose").onclick=()=>document.getElementById("tabletManageDialog").close();</script></body></html>

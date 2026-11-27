@@ -1,32 +1,34 @@
 import{createClient}from'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 const $=id=>document.getElementById(id),cfg=window.NATURE_SUPABASE||{};
-let sb,channel,game,tick,phase='idle',members=new Map();
+let sb,channel,game,tick,advanceTimer,sweepTimer,phase='idle',members=new Map();
 const esc=x=>String(x??'').replace(/[&<>"]/g,a=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[a]));
 const uuid=()=>crypto.randomUUID(),randomRoom=()=>{let a=new Uint8Array(16);crypto.getRandomValues(a);return[...a].map(n=>n.toString(16).padStart(2,'0')).join('')};
 const send=async d=>{if(channel)try{await channel.send({type:'broadcast',event:'teacher',payload:d})}catch(e){console.warn(e)}};
 const order=()=>[...members.values()].filter(x=>x.answered).sort((a,b)=>b.score-a.score||b.correct-a.correct||a.latency-b.latency||a.no-b.no);
 function ranking(){
- let a=order();$('tabletTop3').innerHTML=a.length?a.slice(0,3).map((p,i)=>'<div class="tabletRank">'+['🥇','🥈','🥉'][i]+' '+esc(p.no)+'號 '+esc(p.name)+' <b>'+p.score+'分</b></div>').join(''):'目前尚無得分';
- $('tabletPlayerCount').textContent='已加入 '+members.size+' 位｜本題已完成 '+(phase==='running'?[...members.values()].filter(x=>x.last===game?.questionId).length:0)+' 位';
- $('tabletRoster').textContent=[...members.values()].sort((a,b)=>a.no-b.no).map(p=>p.no+'號 '+p.name).join('、');
+ let a=order();$('tabletTop3').innerHTML=Array.from({length:5},(_,i)=>{const p=a[i];return '<div class="tabletRank"><span class="rankMedal">'+(['🥇','🥈','🥉'][i]||String(i+1))+'</span>'+(p?(p.avatar?'<img class="rankAvatar" src="'+esc(p.avatar)+'" alt="">':'<span class="rankAvatar">👤</span>')+'<strong>'+esc(p.name)+'</strong><b>'+p.score+'分</b>':'<span class="rankEmpty">—</span>')+'</div>'}).join('');
+ $('tabletPlayerCount').textContent='全班 '+(game?.students.length||0)+' 人｜已加入 '+members.size+' 人｜本題完成 '+(phase==='running'?[...members.values()].filter(x=>x.last===game?.questionId).length:0)+' 人';
+ const roster=$('tabletRoster');roster.replaceChildren();for(const p of [...members.values()].sort((a,b)=>a.no-b.no)){const row=document.createElement('div'),b=document.createElement('button');row.className='tabletMember';row.append(document.createTextNode(p.no+'號 '+p.name+(phase==='running'&&p.last===game.questionId?' ✓':'')));b.textContent='移除';b.type='button';b.onclick=()=>{if(confirm('移除 '+p.no+'號 '+p.name+'？本局成績將清除，可重新加入。'))removePlayer(p.client,'kicked')};row.append(b);roster.append(row)}
  if(game?.token&&window.opener&&!window.opener.closed){
   window.opener.postMessage({kind:'fundesk-king-live',token:game.token,top3:a.slice(0,3).map(p=>({no:p.no,name:p.name,score:p.score}))},location.origin);
  }
 }
+function removePlayer(client,reason){if(!members.delete(client))return;send({type:reason,to:client});ranking();$('tabletStatus').textContent='目前 '+members.size+' 位已加入';checkAllDone()}
 const question=()=>phase==='running'&&!game.locked?{id:game.questionId,index:game.index+1,total:game.questions.length,text:game.questions[game.index].question,options:game.questions[game.index].options,deadline:game.deadline}:null;
 async function handle(p){
  if(!game||!p||phase==='aborted'||phase==='ended')return;
  const client=String(p.client||'');if(!/^[a-z0-9-]{16,100}$/i.test(client))return;
+ const known=members.get(client);if(known)known.lastSeen=Date.now();if(p.type==='heartbeat'){if(!known)send({type:'rejoin',to:client});return}
  if(p.type==='sync'){send({type:'state',to:client,phase,question:question(),label:game.label});return}
- if(p.type==='leave'){if(members.delete(client)){ranking();$('tabletStatus').textContent='有學生退出，現有 '+members.size+' 位已加入';checkAllDone();}return}
+ if(p.type==='leave'){removePlayer(client,'left');send({type:'left',to:client});return}
  if(p.type==='join'){
   const no=Number(p.no),s=game.students.find(x=>Number(x.no)===no);
-  if(!s||!Number.isInteger(no)||[...members.values()].some(x=>x.no===no&&x.client!==client)){
+  const old=[...members.values()].find(x=>x.no===no&&x.client!==client);if(old&&Date.now()-old.lastSeen>20000){members.delete(old.client);send({type:'rejoin',to:old.client})}if(!s||!Number.isInteger(no)||known&&known.no!==no||[...members.values()].some(x=>x.no===no&&x.client!==client)){
    send({type:'admitted',to:client,ok:false,error:!s?'找不到這個座號':'座號已有人加入'});return;
   }
   if(!members.has(client)&&members.size>=40){send({type:'admitted',to:client,ok:false,error:'本局已達 40 位參賽上限'});return}
-  if(!members.has(client))members.set(client,{client,id:String(s.id),code:game.code,no,name:s.name,score:0,correct:0,latency:0,answered:0,last:''});
-  send({type:'admitted',to:client,ok:true,name:s.name,no,score:members.get(client).score,phase,question:question()});
+  if(!members.has(client))members.set(client,{client,id:String(s.id),code:game.code,no,name:s.name,avatar:s.avatar||'',score:0,correct:0,latency:0,answered:0,last:'',lastSeen:Date.now()});
+  send({type:'admitted',to:client,ok:true,name:s.name,no,score:members.get(client).score,answered:members.get(client).last===game.questionId,phase,question:question()});
   ranking();$('tabletStatus').textContent='已連線 '+members.size+' 位學生，老師可以隨時開始';
   return;
  }
@@ -63,14 +65,14 @@ function closeRound(reason='time'){
  $('tabletAnswers').children[q.answer]?.classList.add('right');
  $('tabletNext').classList.remove('hidden');
  $('tabletNext').textContent=game.index+1===game.questions.length?'🏁 結算競賽':'下一題 ➜';
- send({type:'reveal',id:game.questionId,correct:q.answer,explanation:q.explanation||''});
+ send({type:'reveal',id:game.questionId,correct:q.answer,explanation:q.explanation||''});if(reason==='all'){const id=game.questionId; $('tabletCountdown').textContent='✅ 全員完成，3秒後下一題';advanceTimer=setTimeout(()=>{if(game&&phase==='running'&&game.questionId===id&&game.locked){game.index++;startRound()}},3000)}
 }
-function startRound(){
+function startRound(){clearTimeout(advanceTimer);
  if(!game||phase==='aborted'||phase==='ended')return;
  if(game.index>=game.questions.length){finish();return}
  phase='running';game.locked=false;game.questionId='q'+game.index+'-'+game.id;
  $('tabletNext').classList.remove('hidden');$('tabletNext').textContent=game.index+1===game.questions.length?'🏁 結算競賽':'⏭️ 下一題（可直接跳題）';
- game.deadline=Date.now()+game.duration*1000;drawQuestion();send({type:'question',question:question()});
+ game.deadline=Date.now()+game.duration*1000;drawQuestion();ranking();send({type:'question',question:question()});
  clearInterval(tick);tick=setInterval(()=>{
   const left=Math.max(0,game.deadline-Date.now());
   $('tabletCountdown').textContent='⏱ '+Math.ceil(left/1000)+' 秒';
@@ -80,7 +82,7 @@ function startRound(){
 async function finish(){
  if(!game||phase==='ended'||phase==='aborted')return;
  const a=order();if(!a.length){$('tabletStatus').textContent='尚無學生作答，不可結算獎勵';return}
- clearInterval(tick);phase='ended';send({type:'ended',ranking:a.map(x=>({no:x.no,name:x.name,score:x.score}))});
+ clearInterval(tick);clearInterval(sweepTimer);clearTimeout(advanceTimer);phase='ended';send({type:'ended',ranking:a.map(x=>({no:x.no,name:x.name,score:x.score}))});
  if(game?.token&&window.opener&&!window.opener.closed)window.opener.postMessage({kind:'fundesk-king-closed',token:game.token},location.origin);
  game.show('finished');
  $('ranking').innerHTML=a.map((p,i)=>'<div class="rankLine"><b>'+(['🥇','🥈','🥉'][i]||'🏅')+' '+esc(p.no)+'號 '+esc(p.name)+'</b><span>'+p.score+'分</span></div>').join('');
@@ -91,7 +93,7 @@ async function finish(){
  window.opener.postMessage({kind:'fundesk-king-finish',token:game.token,gameId:game.id,mode:'tablet',subject:game.subject,questionCount:game.questions.length,activityCodes:[...new Set(game.questions.map(q=>String(q.unit)))],players,winners,winner:null},location.origin);
 }
 async function stop(abort){
- clearInterval(tick);tick=null;
+ clearInterval(tick);clearInterval(sweepTimer);clearTimeout(advanceTimer);tick=null;
  if(abort&&channel)await send({type:'aborted'});
  if(game?.token&&window.opener&&!window.opener.closed)window.opener.postMessage({kind:'fundesk-king-closed',token:game.token},location.origin);
  phase=abort?'aborted':'ended';
@@ -105,9 +107,9 @@ async function start({classroom,questions,subject,duration,token,show}){
  if(game)await stop(false);
  sb||=createClient(cfg.url,cfg.anonKey,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
  const room=randomRoom(),url=new URL('./king-student.html',location.href);
- url.searchParams.set('room',room);
+ url.searchParams.set('room',room);url.searchParams.set('v','20261127-rejoin5');
  game={room,id:uuid(),code:classroom.code,label:classroom.label,students:classroom.students,questions,subject,duration,token,show,index:0,locked:false,questionId:'',deadline:0};
- members.clear();phase='lobby';show('tabletHost');
+ members.clear();phase='lobby';show('tabletHost');sweepTimer=setInterval(()=>{if(!game||!['lobby','running'].includes(phase))return;for(const p of [...members.values()])if(Date.now()-p.lastSeen>45000)removePlayer(p.client,'rejoin')},5000);
  $('tabletHostClass').textContent=classroom.label;$('tabletQR').replaceChildren();
  $('tabletJoinURL').textContent=url.href;
  if(window.QRCode)new window.QRCode($('tabletQR'),{text:url.href,width:156,height:156});
@@ -128,7 +130,7 @@ async function start({classroom,questions,subject,duration,token,show}){
 $('tabletStartNow').onclick=()=>{if(!game||phase!=='lobby')return;$('tabletStartNow').classList.add('hidden');$('tabletFinish').disabled=false;startRound()};
 $('tabletNext').onclick=()=>{
  if(!game||phase!=='running')return;
- if(!game.locked)closeRound('skip');
+ clearTimeout(advanceTimer);if(!game.locked)closeRound('skip');
  $('tabletNext').classList.add('hidden');game.index++;startRound();
 };
 $('tabletFinish').onclick=()=>{if(game&&phase==='running'&&confirm('結束競賽並儲存目前成績？'))finish()};

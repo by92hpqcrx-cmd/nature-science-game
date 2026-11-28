@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 const $=id=>document.getElementById(id);
-const units={'01-01':'動物如何求生存','01-02':'動物具有社會行為嗎','01-03':'動物如何延續生命','02-01':'樂音與噪音有什麼不同','02-02':'樂器如何發出不同的聲音','02-03':'光有什麼特性與現象','03-01':'太陽的位置和四季有關嗎','03-02':'太陽系有哪些成員','03-03':'四季的星空有什麼不一樣','04-01':'空氣與燃燒有什麼關係','04-02':'燃燒的條件與如何滅火','04-03':'為何會生鏽與如何防鏽'};
+const units={'01-01':'動物如何求生存','01-02':'動物具有社會行為嗎','01-03':'動物如何延續生命','02-01':'樂音與噪音有什麼不同','02-02':'樂器如何發出不同的聲音','02-03':'光有什麼特性與現象','03-01':'太陽的位置和四季有關嗎','03-02':'太陽系有哪些成員','03-03':'四季的星空有什麼不一樣','03-04':'補充活動3','04-01':'空氣與燃燒有什麼關係','04-02':'燃燒的條件與如何滅火','04-03':'為何會生鏽與如何防鏽','04-04':'補充活動4'};
 const mathUnits={'9-01':'3的乘法','9-02':'6的乘法','9-03':'7的乘法','9-04':'9的乘法','9-05':'乘法的應用','10-01':'平面圖形的邊、角和頂點','10-02':'正三角形、正方形和長方形','10-03':'認識周界、內部和外部','10-04':'認識周長'};
 const baseQuestions=[...(window.NATURE_QUESTIONS||[]).map(q=>({...q,subject:'science'})),...(window.NATURE_MATH_QUESTIONS||[]).map(q=>({...q,subject:'math'}))];
 let questions=[...baseQuestions];
@@ -34,7 +34,7 @@ function refreshActivities(){
   summary.innerHTML='<strong>'+safe(unitTitles[unit]||unit)+'</strong><span>'+selectedCount+'/'+items.length+' 活動 · '+items.reduce((n,[key])=>n+(picks.has(key)?counts.get(key)||0:0),0)+' 題</span>';details.append(summary);
   const actions=document.createElement('div');actions.className='king-bank-actions';
   for(const [label,checked] of [['全選本單元',true],['取消本單元',false]]){const btn=document.createElement('button');btn.type='button';btn.textContent=label;btn.onclick=()=>{open.add(unit);for(const [key] of items)checked?picks.add(key):picks.delete(key);refreshActivities()};actions.append(btn)}details.append(actions);
-  for(const [key,name] of items){const label=document.createElement('label');label.className='king-bank-activity';const input=document.createElement('input');input.type='checkbox';input.checked=picks.has(key);input.onchange=()=>{open.add(unit);input.checked?picks.add(key):picks.delete(key);refreshActivities()};const title=document.createElement('span');title.textContent='活動 '+Number(key.split('-')[1])+'　'+name;const count=document.createElement('small');count.textContent=(counts.get(key)||0)+' 題';label.append(input,title,count);details.append(label)}
+  for(const [key,name] of items){const label=document.createElement('label');label.className='king-bank-activity';const input=document.createElement('input');input.type='checkbox';input.checked=picks.has(key);input.onchange=()=>{open.add(unit);input.checked?picks.add(key):picks.delete(key);refreshActivities()};const title=document.createElement('span');title.textContent=name.startsWith('補充活動')?name:'活動 '+Number(key.split('-')[1])+'　'+name;const count=document.createElement('small');count.textContent=(counts.get(key)||0)+' 題';label.append(input,title,count);details.append(label)}
   root.append(details);
  }
  $('poolInfo').textContent='已選 '+picks.size+' 個活動，共 '+pool().length+' 題'+(picks.size>1?'（混合抽題）':'');
